@@ -5,6 +5,8 @@ pub struct Lexer {
     pos: usize,
 }
 
+
+
 impl Lexer {
     pub fn new(src: &str) -> Self {
         Self {
@@ -13,9 +15,29 @@ impl Lexer {
         }
     }
 
+
+
+    pub fn has_next(&self) -> bool {
+        self.pos + 1 < self.input.len()
+    }
+
+    
+
+    pub fn next_is(&self, ch: char) -> bool {
+        self.has_next() && (self.input[self.pos + 1] == ch)
+    }
+
+
+
+
+
+
     pub fn tokenize(&mut self) -> Vec<Token> {
+        
+        
         let mut tokens = Vec::new();
 
+        
         while self.pos < self.input.len() {
             let ch= self.input[self.pos];
             
@@ -23,6 +45,7 @@ impl Lexer {
                 self.pos += 1;
                 continue;
             }
+
 
 
             if ch.is_ascii_alphabetic() || ch == '_' {
@@ -45,6 +68,7 @@ impl Lexer {
             }
 
             match ch {
+
                 '+' => {
                     tokens.push(Token {
                         kind: TokenKind::Plus,
@@ -52,13 +76,65 @@ impl Lexer {
                     });
                     self.pos += 1;
                 }
-                '=' => {
+
+                '-' => {
                     tokens.push(Token {
-                        kind: TokenKind::Equal,
-                        text: "=".to_string(),
+                        kind: TokenKind::Minus,
+                        text: "-".to_string(),
                     });
                     self.pos += 1;
                 }
+
+                '*' => {
+                    tokens.push(Token {
+                        kind: TokenKind::Star,
+                        text: "*".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
+
+                '/' => {
+                    tokens.push(Token {
+                        kind: TokenKind::Slash,
+                        text: "*".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
+                '=' => {     
+                    if self.next_is('='){
+                        tokens.push(Token {
+                        kind: TokenKind::EqualEqual,
+                        text: "==".to_string(),
+                        });
+                        self.pos += 2;  
+                    }
+                    else {
+                        tokens.push(Token {
+                            kind: TokenKind::Equal,
+                            text: "=".to_string(),
+                        });
+                        self.pos += 1;                 
+                    }
+                }
+
+                '(' => {
+                    tokens.push(Token {
+                        kind: TokenKind::LParen,
+                        text: "(".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
+                ')' => {
+                    tokens.push(Token {
+                        kind: TokenKind::RParen,
+                        text: ")".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
                 ';' => {
                     tokens.push(Token {
                         kind: TokenKind::Semicolon,
@@ -66,6 +142,7 @@ impl Lexer {
                     });
                     self.pos += 1;
                 }
+
                 _ => {
                     tokens.push(Token {
                         kind: TokenKind::Unknown,
@@ -73,7 +150,9 @@ impl Lexer {
                     });
                     self.pos += 1;
                 }
+
             }
+
         }
 
         tokens.push(Token {
