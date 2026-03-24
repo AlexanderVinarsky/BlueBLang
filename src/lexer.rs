@@ -1,3 +1,5 @@
+use core::panic;
+
 use crate::token::{Token, TokenKind};
 
 pub struct Lexer {
@@ -66,6 +68,66 @@ impl Lexer {
                 tokens.push(Token {kind, text});
                 continue;
             }
+
+
+            if ch == '"' {
+                let mut res = String::new();
+                let mut closed = false;
+            
+                while self.has_next() {
+                    self.pos += 1;
+                
+                    if self.input[self.pos] == '"' {
+                        closed = true;
+                        break;
+                    } else {
+                        res.push(self.input[self.pos]);
+                    }
+                }
+            
+                if !closed {
+                    panic!("error: unterminated string literal");
+                }
+            
+                tokens.push(Token {
+                    kind: TokenKind::String,
+                    text: res,
+                });
+            
+                self.pos += 1;
+                continue;
+            }
+
+
+            if ch.is_ascii_digit() {
+                let mut res = String::from(ch);
+            
+                while self.has_next() && self.input[self.pos + 1].is_ascii_digit() {
+                    res.push(self.input[self.pos + 1]);
+                    self.pos += 1;
+                }
+            
+                if self.has_next() {
+                    let next = self.input[self.pos + 1];
+                
+                    if next.is_ascii_alphabetic() || next == '_' {
+                        panic!("error: invalid number literal");
+                    }
+                }
+            
+                tokens.push(Token {
+                    kind: TokenKind::Number,
+                    text: res,
+                });
+            
+                self.pos += 1;
+                continue;
+            }
+
+
+
+
+
 
             match ch {
 
