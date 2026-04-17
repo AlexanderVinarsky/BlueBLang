@@ -60,8 +60,18 @@ impl Lexer {
 
                 let text: String = self.input[start..self.pos].iter().collect(); // !
                 
+
                 let kind = match text.as_str() {
-                    "let" => TokenKind::Let,
+                    "let"   => TokenKind::Let,
+                    "if"    => TokenKind::If,
+                    "else"  => TokenKind::Else,
+                    "while" => TokenKind::While,  
+                    "for"   => TokenKind::For,
+                    "ret"   => TokenKind::Ret, 
+                    "true"  => TokenKind::True,
+                    "false" => TokenKind::False,
+                    "and"   => TokenKind::And,
+                    "or"    => TokenKind::Or,
                     _ => TokenKind::Identifier,
                 };
 
@@ -181,6 +191,57 @@ impl Lexer {
                     }
                 }
 
+                '>' => {     
+                    if self.next_is('='){
+                        tokens.push(Token {
+                        kind: TokenKind::GreaterEqual,
+                        text: ">=".to_string(),
+                        });
+                        self.pos += 2;  
+                    }
+                    else {
+                        tokens.push(Token {
+                            kind: TokenKind::Greater,
+                            text: ">".to_string(),
+                        });
+                        self.pos += 1;                 
+                    }
+                }
+
+                '<' => {     
+                    if self.next_is('='){
+                        tokens.push(Token {
+                        kind: TokenKind::LessEqual,
+                        text: "<=".to_string(),
+                        });
+                        self.pos += 2;  
+                    }
+                    else {
+                        tokens.push(Token {
+                            kind: TokenKind::Less,
+                            text: "<".to_string(),
+                        });
+                        self.pos += 1;                 
+                    }
+                }
+
+                '!' => {     
+                    if self.next_is('='){
+                        tokens.push(Token {
+                        kind: TokenKind::BangEqual,
+                        text: "!=".to_string(),
+                        });
+                        self.pos += 2;  
+                    }
+                    else {
+                        tokens.push(Token {
+                            kind: TokenKind::Bang,
+                            text: "!".to_string(),
+                        });
+                        self.pos += 1;                 
+                    }
+                }
+
                 '(' => {
                     tokens.push(Token {
                         kind: TokenKind::LParen,
@@ -193,6 +254,62 @@ impl Lexer {
                     tokens.push(Token {
                         kind: TokenKind::RParen,
                         text: ")".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
+                '{' => {
+                    tokens.push(Token {
+                        kind: TokenKind::LBrace,
+                        text: "{".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
+                '}' => {
+                    tokens.push(Token {
+                        kind: TokenKind::RBrace,
+                        text: "}".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
+                '[' => {
+                    tokens.push(Token {
+                        kind: TokenKind::LBracket,
+                        text: "[".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
+                ']' => {
+                    tokens.push(Token {
+                        kind: TokenKind::RBracket,
+                        text: "]".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
+                '.' => {
+                    tokens.push(Token {
+                        kind: TokenKind::Dot,
+                        text: ".".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
+                ',' => {
+                    tokens.push(Token {
+                        kind: TokenKind::Comma,
+                        text: ",".to_string(),
+                    });
+                    self.pos += 1;
+                }
+
+                ':' => {
+                    tokens.push(Token {
+                        kind: TokenKind::Colon,
+                        text: ":".to_string(),
                     });
                     self.pos += 1;
                 }
