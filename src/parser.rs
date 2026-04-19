@@ -65,6 +65,9 @@ impl Parser {
         !self.is_eof() && self.current().kind == kind
     }
 
+    fn peek_kind(&self)->&TokenKind {
+        &self.tokens[self.pos].kind
+    }
 
     fn is_eof(&self)-> bool {
         self.current().kind == TokenKind::Eof
@@ -95,23 +98,27 @@ impl Parser {
 
 
 
-    // public
+
 
     pub fn parse_program(&mut self) -> Vec<Stmt> {
         let mut stmts= Vec::new();
 
         while !self.is_eof() {
-            stmts.push(self.parse_statement());
+            stmts.push(self.parse_stmt());
         }
         return stmts;
     }
 
 
-    fn parse_statement(&mut self) -> Stmt {
-        if self.check_kind(TokenKind::Let) {
-            self.parse_let_stmt()
-        } else {
-            self.parse_expr_stmt()
+
+    fn parse_stmt(&mut self)->Stmt {
+        match self.peek_kind() {
+            TokenKind::Let          => self.parse_let_stmt(),
+            TokenKind::If           => self.parse_if_stmt(),
+            TokenKind::While        => self.parse_while_stmt(),
+            TokenKind::Ret          => self.parse_return_stmt(),
+            TokenKind::LBrace       => self.parse_block(),
+            _ => self.parse_expr_stmt()
         }
     }
 
@@ -130,6 +137,68 @@ impl Parser {
     }
 
 
+    fn parse_if_stmt(&mut self)->Stmt {
+        self.expect_kind(TokenKind::If);
+
+        let condition: Expr = self.parse_expr();
+        let then_branch: Box<Stmt> = Box::new(self.parse_stmt());
+
+        let else_branch=
+            if self.check_kind(TokenKind::Else) {
+                self.expect_kind(TokenKind::Else);
+                Some(Box::new(self.parse_stmt()))
+            } else {
+                None
+            };
+
+        return Stmt::If {condition, then_branch, else_branch}
+    }
+
+
+
+    fn parse_while_stmt(&mut self) -> Stmt {
+        self.expect_kind(TokenKind::While);
+
+        let condition: Expr = self.parse_expr();
+        let body: Box<Stmt> = Box::new(self.parse_stmt());
+
+        return Stmt::While {condition, body}
+    }
+
+
+
+    fn parse_return_stmt(&mut self) -> Stmt {
+        self.expect_kind(TokenKind::Ret);
+        
+        if self.check_kind(TokenKind::Semicolon) {
+            self.expect_kind(TokenKind::Semicolon);
+            return Stmt::Return(None);
+        }
+
+        let value = self.parse_expr();
+        self.expect_kind(TokenKind::Semicolon);
+
+        return Stmt::Return(Some(value))
+    }
+
+
+
+    fn parse_block(&mut self) -> Stmt {
+        self.expect_kind(TokenKind::LBrace);
+
+        let mut stmts= Vec::new();
+
+        while !self.check_kind(TokenKind::RBrace) && !self.check_kind(TokenKind::Eof) {
+            stmts.push(self.parse_stmt());
+        }
+
+        self.expect_kind(TokenKind::RBrace);
+
+        Stmt::Block(stmts)
+    }
+
+
+
     fn parse_expr_stmt(&mut self) -> Stmt {
         let expr = self.parse_expr();
         self.expect_kind(TokenKind::Semicolon);
@@ -144,9 +213,9 @@ parse_expr()                                        +
   -> parse_or()                                     +
       -> parse_and()                                +
           -> parse_equality()                       +
-              -> parse_comparison()
-                  -> parse_additive()
-                      -> parse_multiplicative()
+              -> parse_comparison()                 + 
+                  -> parse_additive()               +
+                      -> parse_multiplicative()     +
                           -> parse_unary()          +
                               -> parse_primary()    +
 */

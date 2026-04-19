@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Expr {
     Number(String),
     Identifier(String),
@@ -7,15 +7,15 @@ pub enum Expr {
     Binary {
         left: Box<Expr>,
         op: BinaryOp,
-        right: Box<Expr>,
+        right: Box<Expr>
     },
     Unary {
         op: UnaryOp,
-        expr: Box<Expr>,
+        expr: Box<Expr>
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum BinaryOp {
     Plus,
     Minus,
@@ -34,17 +34,32 @@ pub enum BinaryOp {
     Or,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum UnaryOp {
     Minus,
     Bang,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Stmt {
-    Let {
-        name: String,
-        value: Expr,
-    },
+    Let {name: String, value: Expr},
+
     ExprStmt(Expr),
+
+    Block(Vec<Stmt>),
+
+
+    If {
+        condition:   Expr,
+        then_branch: Box<Stmt>,
+        else_branch: Option<Box<Stmt>>    
+    }, 
+
+
+    While {
+        condition:   Expr,
+        body:        Box<Stmt>
+    },
+
+    Return(Option<Expr>)
 }
