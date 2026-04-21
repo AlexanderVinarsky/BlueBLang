@@ -72,6 +72,7 @@ impl Lexer {
                     "false" => TokenKind::False,
                     "and"   => TokenKind::And,
                     "or"    => TokenKind::Or,
+                    "fn"    => TokenKind::Fn,
                     _ => TokenKind::Identifier,
                 };
 

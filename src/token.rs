@@ -43,8 +43,10 @@ pub enum TokenKind {
     Colon,
     Semicolon,
 
+    Fn,
+
     Eof,
-    Unknown,
+    Unknown
 }
 
 #[derive(Debug, PartialEq, Eq, Clone)]
