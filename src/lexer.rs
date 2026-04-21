@@ -1,6 +1,5 @@
-use core::panic;
-
 use crate::token::{Token, TokenKind};
+use crate::LexError;
 
 pub struct Lexer {
     input: Vec<char>,
@@ -18,13 +17,11 @@ impl Lexer {
     }
 
 
-
     pub fn has_next(&self) -> bool {
         self.pos + 1 < self.input.len()
     }
 
     
-
     pub fn next_is(&self, ch: char) -> bool {
         self.has_next() && (self.input[self.pos + 1] == ch)
     }
@@ -34,7 +31,7 @@ impl Lexer {
 
 
 
-    pub fn tokenize(&mut self) -> Vec<Token> {
+    pub fn tokenize(&mut self) -> Result<Vec<Token>, LexError> {
         
         
         let mut tokens = Vec::new();
@@ -97,7 +94,7 @@ impl Lexer {
                 }
             
                 if !closed {
-                    panic!("error: unterminated string literal");
+                    return Err(LexError {message:"unterminated string literal".into(),});
                 }
             
                 tokens.push(Token {
@@ -122,7 +119,7 @@ impl Lexer {
                     let next = self.input[self.pos + 1];
                 
                     if next.is_ascii_alphabetic() || next == '_' {
-                        panic!("error: invalid number literal");
+                        return Err(LexError {message:"invalid number literal".into(),});
                     }
                 }
             
@@ -170,7 +167,7 @@ impl Lexer {
                 '/' => {
                     tokens.push(Token {
                         kind: TokenKind::Slash,
-                        text: "*".to_string(),
+                        text: "/".to_string(),
                     });
                     self.pos += 1;
                 }
@@ -324,15 +321,10 @@ impl Lexer {
                 }
 
                 _ => {
-                    tokens.push(Token {
-                        kind: TokenKind::Unknown,
-                        text: ch.to_string(),
-                    });
-                    self.pos += 1;
+                    return Err(LexError {message:format!("unexpected character: {}", ch),});
                 }
 
             }
-
         }
 
         tokens.push(Token {
@@ -340,6 +332,8 @@ impl Lexer {
             text: String::new(),
         });
 
-        tokens
+        
+
+        return Ok(tokens);
     }
 }
