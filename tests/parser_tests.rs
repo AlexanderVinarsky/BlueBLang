@@ -1,22 +1,11 @@
-use blueblang::ast::*;
 use blueblang::parse_program;
-
-fn assert_program_ok(src:&str) {
-    let result= parse_program(src);
-    assert!(
-        result.is_ok(),
-        "expected parse success\nsource:\n{}\nerror:\n{:?}",
-        src,
-        result.err()
-    );
-}
 
 fn assert_ok_group(group:&str, cases:&[&str]) {
     for (i, src) in cases.iter().enumerate() {
         let result= parse_program(src);
         assert!(
             result.is_ok(),
-            "group: {}\ncase #{}\nsource:\n{}\nerror:\n{:?}",
+            "group: {}\ncase #{}\nexpected: success\nsource:\n{}\nerror:\n{:?}",
             group,
             i+1,
             src,
@@ -25,6 +14,29 @@ fn assert_ok_group(group:&str, cases:&[&str]) {
     }
 }
 
+fn assert_err_group(group:&str, cases:&[&str]) {
+    for (i, src) in cases.iter().enumerate() {
+        let result= parse_program(src);
+        assert!(
+            result.is_err(),
+            "group: {}\ncase #{}\nexpected: error\nsource:\n{}\nactual:\n{:?}",
+            group,
+            i+1,
+            src,
+            result.ok()
+        );
+    }
+}
+
+
+
+
+
+// TESTS
+
+
+
+// RETURNS AND FNS
 
 #[test]
 fn parses_stmt_case_group() {
@@ -39,7 +51,6 @@ fn parses_stmt_case_group() {
     assert_ok_group("stmt cases", &cases);
 }
 
-
 #[test]
 fn parses_function_case_group() {
     let cases= [
@@ -51,4 +62,32 @@ fn parses_function_case_group() {
     ];
 
     assert_ok_group("function cases", &cases);
+}
+
+
+
+// ASSIGNMENT
+
+#[test]
+fn parses_assignment_case_group() {
+    let cases= [
+        "fn main() { x = 1; }",
+        "fn main() { x = a + b * c; }",
+        "fn main() { while max_age < 100 { squirrel_photos = squirrel_photos + 1; } }",
+        "fn main() { aydar == 1; }",
+        "fn main() { let x = 1; x = x + 2; ret x; }",
+        "fn main() { if true { chloe = cool; } else { chloe = stupid; } }",
+    ];
+
+    assert_ok_group("assignment cases", &cases);
+}
+
+#[test]
+fn rejects_assignment_case_group() {
+    let cases= [
+        "fn main() { maxs_intelligence = ; }",
+        "fn fang() { while x < 10 { x = x + 1 } }",
+    ];
+
+    assert_err_group("assignment error cases", &cases);
 }

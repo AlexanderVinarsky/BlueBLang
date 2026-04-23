@@ -39,15 +39,20 @@ pub enum Stmt {
 
 
     If {
-        condition:   Expr,
-        then_branch: Box<Stmt>,
-        else_branch: Option<Box<Stmt>>    
+        condition:      Expr,
+        then_branch:    Box<Stmt>,
+        else_branch:    Option<Box<Stmt>>    
     }, 
 
 
     While {
-        condition:   Expr,
-        body:        Box<Stmt>
+        condition:  Expr,
+        body:       Box<Stmt>
+    },
+
+    Assign { 
+        name:   String, 
+        value:  Expr 
     },
 
     Return(Option<Expr>)

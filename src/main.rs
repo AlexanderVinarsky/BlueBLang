@@ -1,3 +1,4 @@
 fn main() {
-    println!("BlueBLang!");
+    println!("Welcome to BlueBLang!");
+    println!("Assignment update!");
 }
