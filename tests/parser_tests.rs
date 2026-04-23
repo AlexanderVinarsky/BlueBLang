@@ -91,3 +91,33 @@ fn rejects_assignment_case_group() {
 
     assert_err_group("assignment error cases", &cases);
 }
+
+
+
+// FN CALL
+
+#[test]
+fn parses_call_case_group() {
+    let cases= [
+        "fn main() { foo_chloe(); }",
+        "fn main() { foo_max(1, 2, 3); }",
+        "fn main() { ret foo_chloe(); }",
+        "fn main() { let x = arc_bay(); ret x; }",
+        "fn main() { foong(guitar); }",
+        "fn main() { x = foo_chloe(1); }",
+        "fn main() { if true { foo_chloe(); } else { aydar(); } }",
+    ];
+
+    assert_ok_group("call cases", &cases);
+}
+
+#[test]
+fn rejects_call_case_group() {
+    let cases= [
+        "fn main() { foo_chloe( ; }",
+        "fn main() { foo_chloe 1); }",
+        "fn main() { ret foo_chloe(1,); }",
+    ];
+
+    assert_err_group("call error cases", &cases);
+}

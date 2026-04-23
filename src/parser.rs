@@ -179,6 +179,25 @@ impl Parser {
 
 
 
+    fn parse_args(&mut self) -> Result<Vec<Expr>, ParseError> {
+        let mut args= Vec::new();
+
+        if self.check_kind(TokenKind::RParen) {
+            return Ok(args);
+        }
+
+        args.push(self.parse_expr()?);
+
+        while self.check_kind(TokenKind::Comma) {
+            self.advance();
+            args.push(self.parse_expr()?);
+        }
+
+        return Ok(args);
+    }
+
+
+
     fn parse_block(&mut self)->Result<Block, ParseError> {
         self.expect_kind(TokenKind::LBrace)?;
 
@@ -296,7 +315,8 @@ parse_expr()                                        +
                   -> parse_additive()               +
                       -> parse_multiplicative()     +
                           -> parse_unary()          +
-                              -> parse_primary()    +
+                             -> parse_call()        +
+                                 -> parse_primary() +
 */
 
 
@@ -439,16 +459,38 @@ parse_expr()                                        +
             self.advance();
 
 
-        return Ok(Expr::Unary {
-            op,
-            expr: Box::new(self.parse_unary()?),
-        })
+            return Ok(Expr::Unary {
+                op,
+                expr: Box::new(self.parse_unary()?),
+            })
+        }
+
+        self.parse_call()
     }
 
-    self.parse_primary()
-}
 
 
+    fn parse_call(&mut self) -> Result<Expr, ParseError> {
+        let expr= self.parse_primary()?;
+
+        if self.check_kind(TokenKind::LParen) {
+            
+            match expr {
+                
+                Expr::Identifier(name) => {
+                    self.expect_kind(TokenKind::LParen)?;
+                    let args= self.parse_args()?;
+                    self.expect_kind(TokenKind::RParen)?;
+                    Ok(Expr::Call { name, args })
+                }
+                
+                _ => Err(ParseError { message:"expected function name before '('".into() })
+            }
+        
+        } else {
+            Ok(expr)
+        }
+    }
 
 
 
@@ -494,6 +536,5 @@ parse_expr()                                        +
 
         return Err(ParseError {message:"expected primary expression".into()});
     }
-
 
 }

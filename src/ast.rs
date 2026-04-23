@@ -66,15 +66,22 @@ pub enum Expr {
     Identifier(String),
     String(String),
     Bool(bool),
+
     Binary {
         left: Box<Expr>,
         op: BinaryOp,
         right: Box<Expr>
     },
+
     Unary {
         op: UnaryOp,
         expr: Box<Expr>
-    }
+    },
+
+    Call {
+        name: String,       // !!! f()(1)
+        args: Vec<Expr>
+    },
 }
 
 
