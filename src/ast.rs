@@ -78,10 +78,22 @@ pub enum Expr {
         expr: Box<Expr>
     },
 
+    Index {
+        object: Box<Expr>,
+        index: Box<Expr>
+    },
+
     Call {
-        name: String,       // !!! f()(1)
+        callee: Box<Expr>,
         args: Vec<Expr>
     },
+
+    Member {
+        object: Box<Expr>,
+        field: String,
+    },
+
+
 }
 
 

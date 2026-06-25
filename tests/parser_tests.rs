@@ -94,30 +94,34 @@ fn rejects_assignment_case_group() {
 
 
 
-// FN CALL
+// POSTFIX
 
 #[test]
-fn parses_call_case_group() {
+fn parses_postfix_case_group() {
     let cases= [
-        "fn main() { foo_chloe(); }",
-        "fn main() { foo_max(1, 2, 3); }",
-        "fn main() { ret foo_chloe(); }",
-        "fn main() { let x = arc_bay(); ret x; }",
-        "fn main() { foong(guitar); }",
-        "fn main() { x = foo_chloe(1); }",
-        "fn main() { if true { foo_chloe(); } else { aydar(); } }",
+        "fn main() { foo.bar; }",
+        "fn main() { kozyava.bar(); }",
+        "fn main() { arr[i]; }",
+        "fn main() { arr[i + 1]; }",
+        "fn main() { max.bar[i]; }",
+        "fn main() { kate.bar()[i]; }",
+        "fn main() { max.bar(x, y); }",
+        "fn main() { max(bar)[i]; }",
+        "fn main() { ret chloe.bar()[i]; }",
     ];
 
-    assert_ok_group("call cases", &cases);
+    assert_ok_group("postfix cases", &cases);
 }
 
 #[test]
-fn rejects_call_case_group() {
+fn rejects_postfix_case_group() {
     let cases= [
-        "fn main() { foo_chloe( ; }",
-        "fn main() { foo_chloe 1); }",
-        "fn main() { ret foo_chloe(1,); }",
+        "fn main() { foo.; }",
+        "fn main() { arr[]; }",
+        "fn main() { fang[i; }",
+        "fn main() { foo.(x); }",
+        "fn main() { foo.bar(,); }",
     ];
 
-    assert_err_group("call error cases", &cases);
+    assert_err_group("postfix error cases", &cases);
 }

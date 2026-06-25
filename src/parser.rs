@@ -465,31 +465,53 @@ parse_expr()                                        +
             })
         }
 
-        self.parse_call()
+        self.parse_postfix()
     }
 
 
 
-    fn parse_call(&mut self) -> Result<Expr, ParseError> {
-        let expr= self.parse_primary()?;
+    fn parse_postfix(&mut self) -> Result<Expr, ParseError> {
+        let mut expr= self.parse_primary()?;
 
-        if self.check_kind(TokenKind::LParen) {
-            
-            match expr {
-                
-                Expr::Identifier(name) => {
-                    self.expect_kind(TokenKind::LParen)?;
-                    let args= self.parse_args()?;
-                    self.expect_kind(TokenKind::RParen)?;
-                    Ok(Expr::Call { name, args })
+        loop {
+            let cur = self.peek_kind();
+
+            match cur {
+
+                TokenKind::LBracket => {
+                    self.expect_kind(TokenKind::LBracket)?;
+                    let index = self.parse_expr()?;
+                    self.expect_kind(TokenKind::RBracket)?;
+                    expr = Expr::Index {
+                        object: Box::new(expr),
+                        index:  Box::new(index)
+                    }
                 }
-                
-                _ => Err(ParseError { message:"expected function name before '('".into() })
+
+                TokenKind::LParen => {
+                    self.expect_kind(TokenKind::LParen)?;
+                    let args = self.parse_args()?;
+                    self.expect_kind(TokenKind::RParen)?;
+                    expr = Expr::Call {
+                        callee: Box::new(expr),
+                        args: args
+                    }
+                }
+
+                TokenKind::Dot => {
+                    self.expect_kind(TokenKind::Dot)?;
+                    let field = self.expect_identifier()?;
+                    expr = Expr::Member {
+                        object: Box::new(expr),
+                        field: field,
+                    }
+                }
+
+                _ => break
+
             }
-        
-        } else {
-            Ok(expr)
         }
+        return Ok(expr);
     }
 
 
