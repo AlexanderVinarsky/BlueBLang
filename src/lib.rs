@@ -1,19 +1,15 @@
-pub mod ast;
-pub mod lexer;
-pub mod parser;
-pub mod token;
+pub mod frontend;
 
-use ast::Program;
-use lexer::Lexer;
-use parser::Parser;
+use crate::frontend::ast::Program;
+use crate::frontend::lexer::Lexer;
+use crate::frontend::parser::Parser;
 
-pub type FrontendResult<T>= Result<T, FrontendError>;
+pub type FrontendResult<T> = Result<T, FrontendError>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LexError {
-    pub message:String,
+    pub message: String,
 }
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ParseError {
     pub message:String,

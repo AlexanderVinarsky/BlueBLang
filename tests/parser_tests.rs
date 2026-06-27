@@ -125,3 +125,29 @@ fn rejects_postfix_case_group() {
 
     assert_err_group("postfix error cases", &cases);
 }
+
+#[test]
+fn parses_assignment_target_case_group() {
+    let cases= [
+        "fn main() { arr[i] = x; }",
+        "fn main() { arr[i + 1] = foo.bar; }",
+        "fn main() { foo.bar = x; }",
+        "fn main() { foo.bar[i] = y; }",
+    ];
+
+    assert_ok_group("assignment target cases", &cases);
+}
+
+#[test]
+fn rejects_assignment_target_case_group() {
+    let cases= [
+        "fn main() { arr[] = x; }",
+        "fn main() { foo. = x; }",
+        "fn main() { foo.bar = ; }",
+        "fn main() { arr[i = x; }",
+        "fn main() { foo() = x; }",
+        "fn main() { a + b = x; }",
+    ];
+
+    assert_err_group("assignment target error cases", &cases);
+}

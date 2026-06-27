@@ -11,11 +11,15 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="">
+    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="postifx assignment parsing">
+      <change afterPath="$PROJECT_DIR$/src/frontend/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/ast.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lexer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/lexer.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/token.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/token.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/parser_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/parser_tests.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +27,13 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -31,61 +42,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="6.857640994814466E-4" />
-      <entry key="MS500" value="0.23334241899263294" />
-      <entry key="S2" value="1.1827737035248362" />
-      <entry key="S5" value="3.350136843533896" />
-      <entry key="S10" value="5.704117935567136" />
-      <entry key="S30" value="11.983023019659216" />
-      <entry key="S60" value="19.964517565285583" />
-      <entry key="M2" value="30.76958410194284" />
-      <entry key="M5" value="44.78875769246037" />
-      <entry key="M10" value="53.6807056500717" />
-      <entry key="M15" value="60.617902705129936" />
-      <entry key="M30" value="87.67219603932054" />
-      <entry key="H1" value="149.68963131048883" />
-      <entry key="H2" value="234.6439595171403" />
-      <entry key="H4" value="310.5563797958589" />
-      <entry key="D1" value="403.8643870369334" />
-      <entry key="W1" value="423.58833394329827" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0000000129691933" />
+      <entry key="S5" value="1.0013441065375437" />
+      <entry key="S10" value="1.0634239551003923" />
+      <entry key="S30" value="1.8293035339736365" />
+      <entry key="S60" value="2.577260751300047" />
+      <entry key="M2" value="3.1900096201653576" />
+      <entry key="M5" value="6.145504270564426" />
+      <entry key="M10" value="18.57189562153422" />
+      <entry key="M15" value="31.788399991779702" />
+      <entry key="M30" value="67.93107878001011" />
+      <entry key="H1" value="135.29148638056233" />
+      <entry key="H2" value="228.80193531977548" />
+      <entry key="H4" value="315.87929503027453" />
+      <entry key="D1" value="426.88445965670917" />
+      <entry key="W1" value="450.8402889712836" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000006961975147" />
-      <entry key="S2" value="1.028885714732727" />
-      <entry key="S5" value="1.242333958655312" />
-      <entry key="S10" value="1.5027014148967681" />
-      <entry key="S30" value="2.276234158933815" />
-      <entry key="S60" value="3.51930220703098" />
-      <entry key="M2" value="5.385388972946779" />
-      <entry key="M5" value="8.138377366030289" />
-      <entry key="M10" value="9.849216940954227" />
-      <entry key="M15" value="10.811122096983073" />
-      <entry key="M30" value="13.00499692136474" />
-      <entry key="H1" value="16.634159410941848" />
-      <entry key="H2" value="21.333998929184137" />
-      <entry key="H4" value="25.532080052801433" />
-      <entry key="D1" value="30.712811202657498" />
-      <entry key="W1" value="31.810137787922493" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="5.52583203957943E-221" />
+      <entry key="S5" value="9.688366821667912E-89" />
+      <entry key="S10" value="1.3270240808973387E-44" />
+      <entry key="S30" value="4.7049206784133544E-15" />
+      <entry key="S60" value="1.600015709115082E-7" />
+      <entry key="M2" value="0.0011482882453879978" />
+      <entry key="M5" value="0.27673963296693355" />
+      <entry key="M10" value="1.8162200758075067" />
+      <entry key="M15" value="3.5025307042132225" />
+      <entry key="M30" value="7.402285700360437" />
+      <entry key="H1" value="12.549564467941266" />
+      <entry key="H2" value="18.530458547306814" />
+      <entry key="H4" value="23.795407476280623" />
+      <entry key="D1" value="30.354335374380515" />
+      <entry key="W1" value="31.75683000854603" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="7.777257545722162E-4" />
-      <entry key="MS500" value="0.3637985352851187" />
-      <entry key="S2" value="1.778565950270358" />
-      <entry key="S5" value="4.245921313403736" />
-      <entry key="S10" value="6.887338955753663" />
-      <entry key="S30" value="13.98157077207125" />
-      <entry key="S60" value="23.226822228449283" />
-      <entry key="M2" value="35.935255318036155" />
-      <entry key="M5" value="52.7829596712946" />
-      <entry key="M10" value="63.438855493676556" />
-      <entry key="M15" value="71.35964428111379" />
-      <entry key="M30" value="100.6305705384844" />
-      <entry key="H1" value="166.28993528191484" />
-      <entry key="H2" value="255.9541574899687" />
-      <entry key="H4" value="336.0734721061748" />
-      <entry key="D1" value="434.5740606047034" />
-      <entry key="W1" value="455.3980040436792" />
+      <entry key="MS100" value="2.0844120128698644E-5" />
+      <entry key="MS500" value="0.11582350773629635" />
+      <entry key="S2" value="0.5833768436793193" />
+      <entry key="S5" value="0.8073215905744899" />
+      <entry key="S10" value="0.9586186921560874" />
+      <entry key="S30" value="1.7821367591231365" />
+      <entry key="S60" value="2.548058934715125" />
+      <entry key="M2" value="3.1742681987583476" />
+      <entry key="M5" value="6.409690986709462" />
+      <entry key="M10" value="20.366938745170902" />
+      <entry key="M15" value="35.265251649623394" />
+      <entry key="M30" value="75.30500115971442" />
+      <entry key="H1" value="147.8145143797001" />
+      <entry key="H2" value="247.3111989835729" />
+      <entry key="H4" value="339.66046667126636" />
+      <entry key="D1" value="457.2356484378316" />
+      <entry key="W1" value="482.5966455395702" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -123,6 +134,12 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/frontend" />
+    </key>
+  </component>
   <component name="RunManager" selected="Cargo.Run blueblang">
     <configuration name="Run blueblang" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="buildProfileId" value="dev" />
@@ -172,11 +189,24 @@
       <updated>1782415138834</updated>
       <workItem from="1782415140868" duration="12442000" />
       <workItem from="1782427658195" duration="19000" />
-      <workItem from="1782560045192" duration="6514000" />
+      <workItem from="1782560045192" duration="7962000" />
     </task>
+    <task id="LOCAL-00001" summary="postifx assignment parsing">
+      <option name="closed" value="true" />
+      <created>1782567837065</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1782567837065</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="postifx assignment parsing" />
+    <option name="LAST_COMMIT_MESSAGE" value="postifx assignment parsing" />
   </component>
 </project>
