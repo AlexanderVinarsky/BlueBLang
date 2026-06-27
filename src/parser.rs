@@ -88,7 +88,12 @@ impl Parser {
         return self.check_kind(TokenKind::Identifier) && self.check_next_kind(TokenKind::Equal);
     }
 
-
+    fn is_assignable_target(&self, expr:&Expr) -> bool {
+        match expr {
+            Expr::Identifier(_) | Expr::Member { .. } | Expr::Index { .. } => true,
+            _ => false,
+        }
+    }
 
     fn is_eof(&self)-> bool {
         self.current().kind == TokenKind::Eof
@@ -215,15 +220,31 @@ impl Parser {
 
 
 
-    fn parse_stmt(&mut self)->Result<Stmt, ParseError> {
+    fn parse_stmt(&mut self) -> Result<Stmt, ParseError> {
         match self.peek_kind() {
-            TokenKind::Let          => self.parse_let_stmt(),
-            TokenKind::If           => self.parse_if_stmt(),
-            TokenKind::While        => self.parse_while_stmt(),
-            TokenKind::Ret          => self.parse_return_stmt(),
-            TokenKind::LBrace       => Ok(Stmt::Block(self.parse_block()?)),
-            TokenKind::Identifier if self.is_assign_stmt() => self.parse_assign(),
-            _ => self.parse_expr_stmt()
+            TokenKind::Let => return self.parse_let_stmt(),
+            TokenKind::If => return self.parse_if_stmt(),
+            TokenKind::While => return self.parse_while_stmt(),
+            TokenKind::Ret => return self.parse_return_stmt(),
+            TokenKind::LBrace => return Ok(Stmt::Block(self.parse_block()?)),
+            _ => {}
+        }
+
+        let return_pos = self.pos;
+
+        let is_assign = match self.parse_postfix() {
+            Ok(target) => {
+                self.check_kind(TokenKind::Equal) && self.is_assignable_target(&target)
+            },
+            Err(_) => false
+        };
+
+        self.pos = return_pos;
+
+        if is_assign {
+            self.parse_assign()
+        } else {
+            self.parse_expr_stmt()
         }
     }
 
@@ -287,13 +308,19 @@ impl Parser {
     }
 
     fn parse_assign(&mut self) -> Result<Stmt, ParseError> {
-        let name= self.expect_identifier()?;
+        let target = self.parse_postfix()?;
+
+        if !self.is_assignable_target(&target) {
+            return Err(ParseError {
+                message: "invalid assignment target".into(),
+            });
+        }
         self.expect_kind(TokenKind::Equal)?;
-        let value= self.parse_expr()?;
+        let value = self.parse_expr()?;
         self.expect_kind(TokenKind::Semicolon)?;
-        
-        return Ok(Stmt::Assign {name, value});
-}
+
+        Ok(Stmt::Assign { target, value })
+    }
 
 
 

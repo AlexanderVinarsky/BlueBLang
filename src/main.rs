@@ -7,21 +7,16 @@ fn main() {
 
 
     let cases= [
-        "fn main() { foo.bar; }",
-        "fn main() { foo.bar(); }",
-        "fn main() { arr[i]; }",
-        "fn main() { arr[i + 1]; }",
-        "fn main() { foo.bar[i]; }",
-        "fn main() { foo.bar()[i]; }",
-        "fn main() { foo.bar(x, y); }",
-        "fn main() { foo(bar)[i]; }",
-        "fn main() { ret foo.bar()[i]; }",
+        "fn main() { arr[i] = x; }",
+        "fn main() { arr[i + 1] = foo.bar; }",
+        "fn main() { foo.bar = x; }",
+        "fn main() { foo.bar[i] = y; }",
+        "fn main() { foo.bar()[i] = z; }",
 
-        "fn main() { foo.; }",
-        "fn main() { arr[]; }",
-        "fn main() { arr[i; }",
-        "fn main() { foo.(x); }",
-        "fn main() { foo.bar(,); }",
+        "fn main() { arr[] = x; }",
+        "fn main() { foo. = x; }",
+        "fn main() { foo.bar = ; }",
+        "fn main() { arr[i = x; }",
     ];
 
     for (i, input) in cases.iter().enumerate() {
