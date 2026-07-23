@@ -6,8 +6,6 @@ pub struct Lexer {
     pos: usize,
 }
 
-
-
 impl Lexer {
     pub fn new(src: &str) -> Self {
         Self {
@@ -16,75 +14,62 @@ impl Lexer {
         }
     }
 
-
     pub fn has_next(&self) -> bool {
         self.pos + 1 < self.input.len()
     }
 
-    
     pub fn next_is(&self, ch: char) -> bool {
         self.has_next() && (self.input[self.pos + 1] == ch)
     }
 
-
-
-
-
-
     pub fn tokenize(&mut self) -> Result<Vec<Token>, LexError> {
-        
-        
         let mut tokens = Vec::new();
 
-        
         while self.pos < self.input.len() {
-            let ch= self.input[self.pos];
-            
+            let ch = self.input[self.pos];
+
             if ch.is_whitespace() {
                 self.pos += 1;
                 continue;
             }
 
-
-
             if ch.is_ascii_alphabetic() || ch == '_' {
                 let start = self.pos;
 
-                while self.pos < self.input.len() && (self.input[self.pos].is_ascii_alphanumeric() || self.input[self.pos] == '_')
+                while self.pos < self.input.len()
+                    && (self.input[self.pos].is_ascii_alphanumeric() || self.input[self.pos] == '_')
                 {
                     self.pos += 1;
                 }
 
                 let text: String = self.input[start..self.pos].iter().collect(); // !
-                
 
                 let kind = match text.as_str() {
-                    "let"   => TokenKind::Let,
-                    "if"    => TokenKind::If,
-                    "else"  => TokenKind::Else,
-                    "while" => TokenKind::While,  
-                    "for"   => TokenKind::For,
-                    "ret"   => TokenKind::Ret, 
-                    "true"  => TokenKind::True,
+                    "let" => TokenKind::Let,
+                    "if" => TokenKind::If,
+                    "else" => TokenKind::Else,
+                    "while" => TokenKind::While,
+                    "for" => TokenKind::For,
+                    "ret" => TokenKind::Ret,
+                    "true" => TokenKind::True,
                     "false" => TokenKind::False,
-                    "and"   => TokenKind::And,
-                    "or"    => TokenKind::Or,
-                    "fn"    => TokenKind::Fn,
+                    "and" => TokenKind::And,
+                    "or" => TokenKind::Or,
+                    "fn" => TokenKind::Fn,
                     _ => TokenKind::Identifier,
                 };
 
-                tokens.push(Token {kind, text});
+                tokens.push(Token { kind, text });
                 continue;
             }
-
 
             if ch == '"' {
                 let mut res = String::new();
                 let mut closed = false;
-            
+
                 while self.has_next() {
                     self.pos += 1;
-                
+
                     if self.input[self.pos] == '"' {
                         closed = true;
                         break;
@@ -92,53 +77,50 @@ impl Lexer {
                         res.push(self.input[self.pos]);
                     }
                 }
-            
+
                 if !closed {
-                    return Err(LexError {message:"unterminated string literal".into(),});
+                    return Err(LexError {
+                        message: "unterminated string literal".into(),
+                    });
                 }
-            
+
                 tokens.push(Token {
                     kind: TokenKind::String,
                     text: res,
                 });
-            
+
                 self.pos += 1;
                 continue;
             }
 
-
             if ch.is_ascii_digit() {
                 let mut res = String::from(ch);
-            
+
                 while self.has_next() && self.input[self.pos + 1].is_ascii_digit() {
                     res.push(self.input[self.pos + 1]);
                     self.pos += 1;
                 }
-            
+
                 if self.has_next() {
                     let next = self.input[self.pos + 1];
-                
+
                     if next.is_ascii_alphabetic() || next == '_' {
-                        return Err(LexError {message:"invalid number literal".into(),});
+                        return Err(LexError {
+                            message: "invalid number literal".into(),
+                        });
                     }
                 }
-            
+
                 tokens.push(Token {
                     kind: TokenKind::Number,
                     text: res,
                 });
-            
+
                 self.pos += 1;
                 continue;
             }
 
-
-
-
-
-
             match ch {
-
                 '+' => {
                     tokens.push(Token {
                         kind: TokenKind::Plus,
@@ -163,7 +145,6 @@ impl Lexer {
                     self.pos += 1;
                 }
 
-
                 '/' => {
                     tokens.push(Token {
                         kind: TokenKind::Slash,
@@ -172,71 +153,67 @@ impl Lexer {
                     self.pos += 1;
                 }
 
-                '=' => {     
-                    if self.next_is('='){
+                '=' => {
+                    if self.next_is('=') {
                         tokens.push(Token {
-                        kind: TokenKind::EqualEqual,
-                        text: "==".to_string(),
+                            kind: TokenKind::EqualEqual,
+                            text: "==".to_string(),
                         });
-                        self.pos += 2;  
-                    }
-                    else {
+                        self.pos += 2;
+                    } else {
                         tokens.push(Token {
                             kind: TokenKind::Equal,
                             text: "=".to_string(),
                         });
-                        self.pos += 1;                 
+                        self.pos += 1;
                     }
                 }
 
-                '>' => {     
-                    if self.next_is('='){
+                '>' => {
+                    if self.next_is('=') {
                         tokens.push(Token {
-                        kind: TokenKind::GreaterEqual,
-                        text: ">=".to_string(),
+                            kind: TokenKind::GreaterEqual,
+                            text: ">=".to_string(),
                         });
-                        self.pos += 2;  
-                    }
-                    else {
+                        self.pos += 2;
+                    } else {
                         tokens.push(Token {
                             kind: TokenKind::Greater,
                             text: ">".to_string(),
                         });
-                        self.pos += 1;                 
+                        self.pos += 1;
                     }
                 }
 
-                '<' => {     
-                    if self.next_is('='){
+                '<' => {
+                    if self.next_is('=') {
                         tokens.push(Token {
-                        kind: TokenKind::LessEqual,
-                        text: "<=".to_string(),
+                            kind: TokenKind::LessEqual,
+                            text: "<=".to_string(),
                         });
-                        self.pos += 2;  
-                    }
-                    else {
+                        self.pos += 2;
+                    } else {
                         tokens.push(Token {
                             kind: TokenKind::Less,
                             text: "<".to_string(),
                         });
-                        self.pos += 1;                 
+                        self.pos += 1;
                     }
                 }
 
-                '!' => {     
-                    if self.next_is('='){
+                '!' => {
+                    if self.next_is('=') {
                         tokens.push(Token {
-                        kind: TokenKind::BangEqual,
-                        text: "!=".to_string(),
+                            kind: TokenKind::BangEqual,
+                            text: "!=".to_string(),
                         });
-                        self.pos += 2;  
-                    }
-                    else {
+                        self.pos += 2;
+                    } else {
                         tokens.push(Token {
                             kind: TokenKind::Bang,
                             text: "!".to_string(),
                         });
-                        self.pos += 1;                 
+                        self.pos += 1;
                     }
                 }
 
@@ -321,9 +298,10 @@ impl Lexer {
                 }
 
                 _ => {
-                    return Err(LexError {message:format!("unexpected character: {}", ch),});
+                    return Err(LexError {
+                        message: format!("unexpected character: {}", ch),
+                    });
                 }
-
             }
         }
 
@@ -331,8 +309,6 @@ impl Lexer {
             kind: TokenKind::Eof,
             text: String::new(),
         });
-
-        
 
         return Ok(tokens);
     }

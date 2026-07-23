@@ -46,11 +46,11 @@ pub enum TokenKind {
     Fn,
 
     Eof,
-    Unknown
+    Unknown,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Token {
     pub kind: TokenKind,
-    pub text: String
+    pub text: String,
 }

@@ -1,20 +1,19 @@
-use std::collections::{HashMap, HashSet};
 use super::ast::{Item, Program};
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SemanticError {
-    pub message: String
+    pub message: String,
 }
 
-
 pub struct SemanticAnalyzer {
-    functions: HashSet<String>
+    functions: HashSet<String>,
 }
 
 impl SemanticAnalyzer {
-    pub fn new()-> Self {
+    pub fn new() -> Self {
         Self {
-            functions: HashSet::new()
+            functions: HashSet::new(),
         }
     }
 
@@ -31,7 +30,7 @@ impl SemanticAnalyzer {
             Item::Function(function) => {
                 if self.functions.contains(&function.name) {
                     return Err(SemanticError {
-                        message: format!("Duplicate function name: {}", function.name)
+                        message: format!("Duplicate function name: {}", function.name),
                     });
                 }
                 self.functions.insert(function.name.clone());
@@ -40,7 +39,6 @@ impl SemanticAnalyzer {
         }
     }
 }
-
 
 pub fn analyze_program(program: &Program) -> Result<(), SemanticError> {
     let mut analyzer = SemanticAnalyzer::new();

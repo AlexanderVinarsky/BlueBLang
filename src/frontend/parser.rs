@@ -2,57 +2,48 @@ use super::ast::*;
 use super::token::{Token, TokenKind};
 use crate::ParseError;
 
-
-
-
 #[derive(Debug)]
 pub struct Parser {
     tokens: Vec<Token>,
-    pos: usize
+    pos: usize,
 }
 
 impl Parser {
-
-
     pub fn new(tokens: Vec<Token>) -> Self {
-        Self {
-            tokens,
-            pos: 0,
-        }
+        Self { tokens, pos: 0 }
     }
 
     // private
 
-    fn current(&self)-> &Token {
+    fn current(&self) -> &Token {
         &self.tokens[self.pos]
     }
 
     fn token_to_binary_op(kind: TokenKind) -> BinaryOp {
         match kind {
-            TokenKind::Plus         => BinaryOp::Plus,
-            TokenKind::Minus        => BinaryOp::Minus,
-            TokenKind::Star         => BinaryOp::Star,
-            TokenKind::Slash        => BinaryOp::Slash,
-            TokenKind::EqualEqual   => BinaryOp::EqualEqual,
-            TokenKind::BangEqual    => BinaryOp::BangEqual,
-            TokenKind::Greater      => BinaryOp::Greater,
+            TokenKind::Plus => BinaryOp::Plus,
+            TokenKind::Minus => BinaryOp::Minus,
+            TokenKind::Star => BinaryOp::Star,
+            TokenKind::Slash => BinaryOp::Slash,
+            TokenKind::EqualEqual => BinaryOp::EqualEqual,
+            TokenKind::BangEqual => BinaryOp::BangEqual,
+            TokenKind::Greater => BinaryOp::Greater,
             TokenKind::GreaterEqual => BinaryOp::GreaterEqual,
-            TokenKind::Less         => BinaryOp::Less,
-            TokenKind::LessEqual    => BinaryOp::LessEqual,
-            TokenKind::And          => BinaryOp::And,
-            TokenKind::Or           => BinaryOp::Or,
+            TokenKind::Less => BinaryOp::Less,
+            TokenKind::LessEqual => BinaryOp::LessEqual,
+            TokenKind::And => BinaryOp::And,
+            TokenKind::Or => BinaryOp::Or,
             _ => panic!("expected binary operator"),
         }
     }
 
     fn token_to_unary_op(kind: TokenKind) -> UnaryOp {
         match kind {
-            TokenKind::Minus        => UnaryOp::Minus,
-            TokenKind::Bang         => UnaryOp::Bang,
+            TokenKind::Minus => UnaryOp::Minus,
+            TokenKind::Bang => UnaryOp::Bang,
             _ => panic!("expected unary operator"),
         }
     }
-
 
     fn advance(&mut self) {
         if self.pos + 1 < self.tokens.len() {
@@ -60,27 +51,23 @@ impl Parser {
         }
     }
 
-
-    fn check_kind(&self, kind:TokenKind)->bool {
+    fn check_kind(&self, kind: TokenKind) -> bool {
         self.current().kind == kind
     }
 
-    fn peek_kind(&self)->&TokenKind {
+    fn peek_kind(&self) -> &TokenKind {
         &self.tokens[self.pos].kind
     }
 
-
-
     fn next_kind(&self) -> &TokenKind {
-        if self.pos + 1 < self.tokens.len(){
+        if self.pos + 1 < self.tokens.len() {
             return &self.tokens[self.pos + 1].kind;
-        }
-        else {
+        } else {
             panic!("expected token, got out of bounds");
-        }    
+        }
     }
 
-    fn check_next_kind(&self, kind:TokenKind) -> bool {
+    fn check_next_kind(&self, kind: TokenKind) -> bool {
         return self.pos + 1 < self.tokens.len() && self.tokens[self.pos + 1].kind == kind;
     }
 
@@ -88,104 +75,101 @@ impl Parser {
         return self.check_kind(TokenKind::Identifier) && self.check_next_kind(TokenKind::Equal);
     }
 
-    fn is_assignable_target(&self, expr:&Expr) -> bool {
+    fn is_assignable_target(&self, expr: &Expr) -> bool {
         match expr {
             Expr::Identifier(_) | Expr::Member { .. } | Expr::Index { .. } => true,
             _ => false,
         }
     }
 
-    fn is_eof(&self)-> bool {
+    fn is_eof(&self) -> bool {
         self.current().kind == TokenKind::Eof
     }
 
-
-    fn expect_kind(&mut self, kind:TokenKind) -> Result<(), ParseError> {
+    fn expect_kind(&mut self, kind: TokenKind) -> Result<(), ParseError> {
         if self.check_kind(kind.clone()) {
             self.advance();
             Ok(())
         } else {
-            Err(ParseError {message: format!("expected token: {:?}, found: {:?}", kind, self.current().kind)})
+            Err(ParseError {
+                message: format!(
+                    "expected token: {:?}, found: {:?}",
+                    kind,
+                    self.current().kind
+                ),
+            })
         }
     }
 
     fn expect_identifier(&mut self) -> Result<String, ParseError> {
         if self.check_kind(TokenKind::Identifier) {
-            let name= self.current().text.clone();
+            let name = self.current().text.clone();
             self.advance();
             Ok(name)
         } else {
-            Err(ParseError {message: format!("expected identifier, found: {:?}", self.current().text)})
+            Err(ParseError {
+                message: format!("expected identifier, found: {:?}", self.current().text),
+            })
         }
     }
 
-    
-
-
-
-
-
     pub fn parse_program(&mut self) -> Result<Program, ParseError> {
-        let mut items= Vec::new();
+        let mut items = Vec::new();
 
         while !self.is_eof() {
             items.push(self.parse_item()?);
         }
-        return Ok(Program{items});
+        return Ok(Program { items });
     }
-
-
 
     fn parse_item(&mut self) -> Result<Item, ParseError> {
         match self.current().kind {
             TokenKind::Fn => Ok(Item::Function(self.parse_function()?)),
             _ => Err(ParseError {
-                message:"function expected".into(),
+                message: "function expected".into(),
             }),
         }
     }
 
-
     fn parse_function(&mut self) -> Result<Function, ParseError> {
-
         self.expect_kind(TokenKind::Fn)?;
 
-        let name= self.expect_identifier()?;
+        let name = self.expect_identifier()?;
 
         self.expect_kind(TokenKind::LParen)?;
 
-        let params= self.parse_params()?;
+        let params = self.parse_params()?;
 
         self.expect_kind(TokenKind::RParen)?;
 
-        let body= self.parse_block()?;
+        let body = self.parse_block()?;
 
         Ok(Function { name, params, body })
     }
 
-
-
     fn parse_params(&mut self) -> Result<Vec<Param>, ParseError> {
-        let mut params= Vec::new();
+        let mut params = Vec::new();
 
         if self.check_kind(TokenKind::RParen) {
             return Ok(params);
         }
 
-        params.push(Param{name: self.expect_identifier()?});
+        params.push(Param {
+            name: self.expect_identifier()?,
+        });
 
         while self.check_kind(TokenKind::Comma) {
             self.advance();
-            params.push(Param{name: self.expect_identifier()?});
+            params.push(Param {
+                name: self.expect_identifier()?,
+            });
         }
 
         return Ok(params);
     }
 
-
-
     fn parse_args(&mut self) -> Result<Vec<Expr>, ParseError> {
-        let mut args= Vec::new();
+        let mut args = Vec::new();
 
         if self.check_kind(TokenKind::RParen) {
             return Ok(args);
@@ -201,12 +185,10 @@ impl Parser {
         return Ok(args);
     }
 
-
-
-    fn parse_block(&mut self)->Result<Block, ParseError> {
+    fn parse_block(&mut self) -> Result<Block, ParseError> {
         self.expect_kind(TokenKind::LBrace)?;
 
-        let mut stmts= Vec::new();
+        let mut stmts = Vec::new();
 
         while !self.check_kind(TokenKind::RBrace) && !self.check_kind(TokenKind::Eof) {
             stmts.push(self.parse_stmt()?);
@@ -214,11 +196,8 @@ impl Parser {
 
         self.expect_kind(TokenKind::RBrace)?;
 
-        return Ok(Block{stmts});
+        return Ok(Block { stmts });
     }
-
-
-
 
     fn parse_stmt(&mut self) -> Result<Stmt, ParseError> {
         match self.peek_kind() {
@@ -233,10 +212,8 @@ impl Parser {
         let return_pos = self.pos;
 
         let is_assign = match self.parse_postfix() {
-            Ok(target) => {
-                self.check_kind(TokenKind::Equal) && self.is_assignable_target(&target)
-            },
-            Err(_) => false
+            Ok(target) => self.check_kind(TokenKind::Equal) && self.is_assignable_target(&target),
+            Err(_) => false,
         };
 
         self.pos = return_pos;
@@ -248,7 +225,6 @@ impl Parser {
         }
     }
 
-
     fn parse_let_stmt(&mut self) -> Result<Stmt, ParseError> {
         self.expect_kind(TokenKind::Let)?;
 
@@ -259,28 +235,28 @@ impl Parser {
 
         self.expect_kind(TokenKind::Semicolon)?;
 
-        return Ok(Stmt::Let {name, value});
+        return Ok(Stmt::Let { name, value });
     }
 
-
-    fn parse_if_stmt(&mut self)->Result<Stmt, ParseError> {
+    fn parse_if_stmt(&mut self) -> Result<Stmt, ParseError> {
         self.expect_kind(TokenKind::If)?;
 
         let condition: Expr = self.parse_expr()?;
         let then_branch: Box<Stmt> = Box::new(self.parse_stmt()?);
 
-        let else_branch=
-            if self.check_kind(TokenKind::Else) {
-                self.expect_kind(TokenKind::Else)?;
-                Some(Box::new(self.parse_stmt()?))
-            } else {
-                None
-            };
+        let else_branch = if self.check_kind(TokenKind::Else) {
+            self.expect_kind(TokenKind::Else)?;
+            Some(Box::new(self.parse_stmt()?))
+        } else {
+            None
+        };
 
-        return Ok(Stmt::If {condition, then_branch, else_branch})
+        return Ok(Stmt::If {
+            condition,
+            then_branch,
+            else_branch,
+        });
     }
-
-
 
     fn parse_while_stmt(&mut self) -> Result<Stmt, ParseError> {
         self.expect_kind(TokenKind::While)?;
@@ -288,14 +264,12 @@ impl Parser {
         let condition: Expr = self.parse_expr()?;
         let body: Box<Stmt> = Box::new(self.parse_stmt()?);
 
-        return Ok(Stmt::While {condition, body})
+        return Ok(Stmt::While { condition, body });
     }
-
-
 
     fn parse_return_stmt(&mut self) -> Result<Stmt, ParseError> {
         self.expect_kind(TokenKind::Ret)?;
-        
+
         if self.check_kind(TokenKind::Semicolon) {
             self.expect_kind(TokenKind::Semicolon)?;
             return Ok(Stmt::Return(None));
@@ -304,7 +278,7 @@ impl Parser {
         let value = self.parse_expr()?;
         self.expect_kind(TokenKind::Semicolon)?;
 
-        return Ok(Stmt::Return(Some(value)))
+        return Ok(Stmt::Return(Some(value)));
     }
 
     fn parse_assign(&mut self) -> Result<Stmt, ParseError> {
@@ -322,37 +296,30 @@ impl Parser {
         Ok(Stmt::Assign { target, value })
     }
 
-
-
     fn parse_expr_stmt(&mut self) -> Result<Stmt, ParseError> {
         let expr = self.parse_expr()?;
         self.expect_kind(TokenKind::Semicolon)?;
-        return Ok(Stmt::ExprStmt(expr))
+        return Ok(Stmt::ExprStmt(expr));
     }
 
+    //NB
 
-//NB
-
-/* 
-parse_expr()                                        +
-  -> parse_or()                                     +
-      -> parse_and()                                +
-          -> parse_equality()                       +
-              -> parse_comparison()                 + 
-                  -> parse_additive()               +
-                      -> parse_multiplicative()     +
-                          -> parse_unary()          +
-                             -> parse_call()        +
-                                 -> parse_primary() +
-*/
-
-
+    /*
+    parse_expr()                                        +
+      -> parse_or()                                     +
+          -> parse_and()                                +
+              -> parse_equality()                       +
+                  -> parse_comparison()                 +
+                      -> parse_additive()               +
+                          -> parse_multiplicative()     +
+                              -> parse_unary()          +
+                                 -> parse_call()        +
+                                     -> parse_primary() +
+    */
 
     fn parse_expr(&mut self) -> Result<Expr, ParseError> {
-        self.parse_or()                      
+        self.parse_or()
     }
-
-
 
     fn parse_or(&mut self) -> Result<Expr, ParseError> {
         let mut left = self.parse_and()?;
@@ -373,8 +340,6 @@ parse_expr()                                        +
         return Ok(left);
     }
 
-
-
     fn parse_and(&mut self) -> Result<Expr, ParseError> {
         let mut left = self.parse_equality()?;
 
@@ -394,8 +359,6 @@ parse_expr()                                        +
         return Ok(left);
     }
 
-
-
     fn parse_equality(&mut self) -> Result<Expr, ParseError> {
         let mut left = self.parse_comparison()?;
 
@@ -408,19 +371,20 @@ parse_expr()                                        +
             left = Expr::Binary {
                 left: Box::new(left),
                 op,
-                right: Box::new(right)
+                right: Box::new(right),
             };
         }
 
         return Ok(left);
     }
 
-
     fn parse_comparison(&mut self) -> Result<Expr, ParseError> {
         let mut left = self.parse_additive()?;
 
-        while self.check_kind(TokenKind::Greater) || self.check_kind(TokenKind::GreaterEqual)
-           || self.check_kind(TokenKind::Less)    || self.check_kind(TokenKind::LessEqual)
+        while self.check_kind(TokenKind::Greater)
+            || self.check_kind(TokenKind::GreaterEqual)
+            || self.check_kind(TokenKind::Less)
+            || self.check_kind(TokenKind::LessEqual)
         {
             let op = Self::token_to_binary_op(self.current().kind.clone());
             self.advance();
@@ -437,8 +401,6 @@ parse_expr()                                        +
         Ok(left)
     }
 
-
-
     fn parse_additive(&mut self) -> Result<Expr, ParseError> {
         let mut left = self.parse_multiplicative()?;
 
@@ -451,14 +413,12 @@ parse_expr()                                        +
             left = Expr::Binary {
                 left: Box::new(left),
                 op,
-                right: Box::new(right)
+                right: Box::new(right),
             };
         }
 
         return Ok(left);
     }
-
-
 
     fn parse_multiplicative(&mut self) -> Result<Expr, ParseError> {
         let mut left = self.parse_unary()?;
@@ -472,46 +432,41 @@ parse_expr()                                        +
             left = Expr::Binary {
                 left: Box::new(left),
                 op,
-                right: Box::new(right)
+                right: Box::new(right),
             };
         }
 
         return Ok(left);
     }
 
-
     fn parse_unary(&mut self) -> Result<Expr, ParseError> {
         if self.check_kind(TokenKind::Minus) || self.check_kind(TokenKind::Bang) {
             let op = Self::token_to_unary_op(self.current().kind.clone());
             self.advance();
 
-
             return Ok(Expr::Unary {
                 op,
                 expr: Box::new(self.parse_unary()?),
-            })
+            });
         }
 
         self.parse_postfix()
     }
 
-
-
     fn parse_postfix(&mut self) -> Result<Expr, ParseError> {
-        let mut expr= self.parse_primary()?;
+        let mut expr = self.parse_primary()?;
 
         loop {
             let cur = self.peek_kind();
 
             match cur {
-
                 TokenKind::LBracket => {
                     self.expect_kind(TokenKind::LBracket)?;
                     let index = self.parse_expr()?;
                     self.expect_kind(TokenKind::RBracket)?;
                     expr = Expr::Index {
                         object: Box::new(expr),
-                        index:  Box::new(index)
+                        index: Box::new(index),
                     }
                 }
 
@@ -521,7 +476,7 @@ parse_expr()                                        +
                     self.expect_kind(TokenKind::RParen)?;
                     expr = Expr::Call {
                         callee: Box::new(expr),
-                        args: args
+                        args: args,
                     }
                 }
 
@@ -534,15 +489,11 @@ parse_expr()                                        +
                     }
                 }
 
-                _ => break
-
+                _ => break,
             }
         }
         return Ok(expr);
     }
-
-
-
 
     fn parse_primary(&mut self) -> Result<Expr, ParseError> {
         if self.check_kind(TokenKind::Number) {
@@ -550,7 +501,6 @@ parse_expr()                                        +
             self.advance();
             return Ok(Expr::Number(text));
         }
-
 
         if self.check_kind(TokenKind::String) {
             let text = self.current().text.clone();
@@ -562,19 +512,17 @@ parse_expr()                                        +
             self.advance();
             return Ok(Expr::Bool(true));
         }
-    
+
         if self.check_kind(TokenKind::False) {
             self.advance();
             return Ok(Expr::Bool(false));
         }
-
 
         if self.check_kind(TokenKind::Identifier) {
             let text = self.current().text.clone();
             self.advance();
             return Ok(Expr::Identifier(text));
         }
-
 
         if self.check_kind(TokenKind::LParen) {
             self.advance();
@@ -583,7 +531,8 @@ parse_expr()                                        +
             return Ok(expr);
         }
 
-        return Err(ParseError {message:"expected primary expression".into()});
+        return Err(ParseError {
+            message: "expected primary expression".into(),
+        });
     }
-
 }

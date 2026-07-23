@@ -12,10 +12,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="postifx assignment parsing">
-      <change afterPath="$PROJECT_DIR$/src/frontend/semantic.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/semantic_tests.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/lexer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/lexer.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/semantic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/semantic.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/token.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/token.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/parser_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/parser_tests.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +33,9 @@
       </list>
     </option>
   </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -39,60 +45,60 @@
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.000000001822617" />
-      <entry key="S10" value="1.0000685302140604" />
-      <entry key="S30" value="1.095909838927545" />
-      <entry key="S60" value="1.7077345590169157" />
-      <entry key="M2" value="4.309054667296705" />
-      <entry key="M5" value="21.618011127955402" />
-      <entry key="M10" value="59.61845235496149" />
-      <entry key="M15" value="92.57679499915852" />
-      <entry key="M30" value="161.8772180731065" />
-      <entry key="H1" value="255.3322364349342" />
-      <entry key="H2" value="396.21601848409256" />
-      <entry key="H4" value="563.6820837478916" />
-      <entry key="D1" value="836.8029867687767" />
-      <entry key="W1" value="904.8510410881204" />
+      <entry key="MS500" value="1.0003723726201428" />
+      <entry key="S2" value="1.6352270112094613" />
+      <entry key="S5" value="4.901611572608207" />
+      <entry key="S10" value="8.358609147609936" />
+      <entry key="S30" value="16.73205329914085" />
+      <entry key="S60" value="32.91534950753267" />
+      <entry key="M2" value="55.805474021964976" />
+      <entry key="M5" value="90.95784740964741" />
+      <entry key="M10" value="134.70866313658397" />
+      <entry key="M15" value="170.4715822997368" />
+      <entry key="M30" value="245.01753110439708" />
+      <entry key="H1" value="343.0172069647664" />
+      <entry key="H2" value="487.1598385226035" />
+      <entry key="H4" value="657.4353827386884" />
+      <entry key="D1" value="935.2944684847896" />
+      <entry key="W1" value="1004.6188893383874" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="7.027176550119719E-265" />
-      <entry key="S2" value="9.155777207592779E-67" />
-      <entry key="S5" value="3.843068157882943E-27" />
-      <entry key="S10" value="6.19943216030508E-14" />
-      <entry key="S30" value="4.080215589378602E-5" />
-      <entry key="S60" value="0.007410330510345314" />
-      <entry key="M2" value="0.11758568533979682" />
-      <entry key="M5" value="0.8914272416230873" />
-      <entry key="M10" value="2.3942858553602364" />
-      <entry key="M15" value="3.750555404552961" />
-      <entry key="M30" value="6.982101463412309" />
-      <entry key="H1" value="11.931533154992538" />
-      <entry key="H2" value="19.89663710104588" />
-      <entry key="H4" value="29.54634105947878" />
-      <entry key="D1" value="45.355919901618336" />
-      <entry key="W1" value="49.29651868484522" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="1.3217536392437701E-98" />
+      <entry key="S5" value="7.0544020277496945E-40" />
+      <entry key="S10" value="2.6560911308407644E-20" />
+      <entry key="S30" value="3.075956084526901E-7" />
+      <entry key="S60" value="6.434074547134877E-4" />
+      <entry key="M2" value="0.03464804300301633" />
+      <entry key="M5" value="0.5467837558013816" />
+      <entry key="M10" value="1.8751708832057923" />
+      <entry key="M15" value="3.186682676118497" />
+      <entry key="M30" value="6.435877551599563" />
+      <entry key="H1" value="11.455315656762961" />
+      <entry key="H2" value="19.49553165129847" />
+      <entry key="H4" value="29.24700563565866" />
+      <entry key="D1" value="45.27901076473025" />
+      <entry key="W1" value="49.28456840719435" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.7791645796604998" />
-      <entry key="MS500" value="0.9513182763317992" />
-      <entry key="S2" value="0.9876008614453725" />
-      <entry key="S5" value="0.9950217745537635" />
-      <entry key="S10" value="0.9975720390668175" />
-      <entry key="S30" value="1.0929816032680568" />
-      <entry key="S60" value="1.7065857538873856" />
-      <entry key="M2" value="4.406992411663107" />
-      <entry key="M5" value="22.466859594809744" />
-      <entry key="M10" value="61.96233612711275" />
-      <entry key="M15" value="96.27929335127602" />
-      <entry key="M30" value="168.82147901544005" />
-      <entry key="H1" value="267.2352797196203" />
-      <entry key="H2" value="416.08987506139584" />
-      <entry key="H4" value="593.2113714474672" />
-      <entry key="D1" value="882.1544234609463" />
-      <entry key="W1" value="954.1468592657883" />
+      <entry key="MS100" value="0.016515906883771567" />
+      <entry key="MS500" value="0.4403461454781418" />
+      <entry key="S2" value="1.4216410759029714" />
+      <entry key="S5" value="4.777409522268952" />
+      <entry key="S10" value="8.281805939786404" />
+      <entry key="S30" value="16.700709367285324" />
+      <entry key="S60" value="32.897303045340145" />
+      <entry key="M2" value="55.82403618315352" />
+      <entry key="M5" value="91.47385554324411" />
+      <entry key="M10" value="136.54191169599218" />
+      <entry key="M15" value="173.615771873434" />
+      <entry key="M30" value="251.41768266613002" />
+      <entry key="H1" value="354.4447429967376" />
+      <entry key="H2" value="506.6328344585297" />
+      <entry key="H4" value="686.6654003116604" />
+      <entry key="D1" value="980.568985694837" />
+      <entry key="W1" value="1053.902754843446" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -104,32 +110,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Cargo.Run blueblang.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/alexandervinarsky/Projects/BlueBLang&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
-    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Run blueblang.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "master",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/home/alexandervinarsky/Projects/BlueBLang",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.first.attach.projects": "true",
+    "settings.editor.selected.configurable": "actions.on.save",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
@@ -186,7 +192,12 @@
       <workItem from="1782415140868" duration="12442000" />
       <workItem from="1782427658195" duration="19000" />
       <workItem from="1782560045192" duration="10235000" />
-      <workItem from="1782583432476" duration="6911000" />
+      <workItem from="1782583432476" duration="7628000" />
+      <workItem from="1782620120478" duration="1275000" />
+      <workItem from="1782642603812" duration="591000" />
+      <workItem from="1783254431214" duration="7000" />
+      <workItem from="1784754785710" duration="551000" />
+      <workItem from="1784839256458" duration="121000" />
     </task>
     <task id="LOCAL-00001" summary="postifx assignment parsing">
       <option name="closed" value="true" />
@@ -205,5 +216,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="postifx assignment parsing" />
     <option name="LAST_COMMIT_MESSAGE" value="postifx assignment parsing" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
