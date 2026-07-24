@@ -1,64 +1,58 @@
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Program {
-    pub items:Vec<Item>
+    pub items: Vec<Item>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Item {
-    Function(Function)
+    Function(Function),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Function {
-    pub name:String,
-    pub params:Vec<Param>,
-    pub body:Block
+    pub name: String,
+    pub params: Vec<Param>,
+    pub body: Block,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Param {
-    pub name:String,
+    pub name: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Block {
-    pub stmts:Vec<Stmt>,
+    pub stmts: Vec<Stmt>,
 }
-
-
-
-
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Stmt {
-    Let {name: String, value: Expr},
+    Let {
+        name: String,
+        value: Expr,
+    },
 
     ExprStmt(Expr),
-
     Block(Block),
 
-
     If {
-        condition:      Expr,
-        then_branch:    Box<Stmt>,
-        else_branch:    Option<Box<Stmt>>    
-    }, 
-
+        condition: Expr,
+        then_branch: Box<Stmt>,
+        else_branch: Option<Box<Stmt>>,
+    },
 
     While {
-        condition:  Expr,
-        body:       Box<Stmt>
+        condition: Expr,
+        body: Box<Stmt>,
     },
 
-    Assign { 
-        target:   Expr,
-        value:  Expr 
+    Assign {
+        target: Expr,
+        value: Expr,
     },
 
-    Return(Option<Expr>)
+    Return(Option<Expr>),
 }
-
-
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Expr {
@@ -70,33 +64,29 @@ pub enum Expr {
     Binary {
         left: Box<Expr>,
         op: BinaryOp,
-        right: Box<Expr>
+        right: Box<Expr>,
     },
 
     Unary {
         op: UnaryOp,
-        expr: Box<Expr>
+        expr: Box<Expr>,
     },
 
     Index {
         object: Box<Expr>,
-        index: Box<Expr>
+        index: Box<Expr>,
     },
 
     Call {
         callee: Box<Expr>,
-        args: Vec<Expr>
+        args: Vec<Expr>,
     },
 
     Member {
         object: Box<Expr>,
         field: String,
     },
-
-
 }
-
-
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BinaryOp {
@@ -116,8 +106,6 @@ pub enum BinaryOp {
     And,
     Or,
 }
-
-
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum UnaryOp {
