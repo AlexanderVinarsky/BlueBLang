@@ -10,7 +10,7 @@ fn accepts_distinct_top_level_functions() {
         fn bar() { ret; }
         "#,
     )
-        .unwrap();
+    .unwrap();
 
     let result = analyze_program(&program);
 
@@ -29,7 +29,7 @@ fn rejects_duplicate_top_level_function_names() {
         fn main() { ret; }
         "#,
     )
-        .unwrap();
+    .unwrap();
 
     let result = analyze_program(&program);
 
@@ -37,4 +37,28 @@ fn rejects_duplicate_top_level_function_names() {
         result.is_err(),
         "expected semantic error, but analysis succeeded"
     );
+}
+
+#[test]
+fn accepts_distinct_function_params() {
+    let src = r#"
+        fn pow(base, exp) {}
+    "#;
+    let program = parse_program(src).unwrap();
+    let result = analyze_program(&program);
+    assert!(
+        result.is_ok(),
+        "semantic analysis failed: {:?}",
+        result.err()
+    );
+}
+
+#[test]
+fn rejects_duplicate_function_params() {
+    let src = r#"
+        fn pow(x, x) {}
+    "#;
+    let program = parse_program(src).unwrap();
+    let result = analyze_program(&program);
+    assert!(result.is_err(), "expected duplicate parameter error");
 }
