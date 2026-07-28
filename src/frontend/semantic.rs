@@ -43,6 +43,12 @@ impl SemanticAnalyzer {
         Ok(())
     }
 
+    fn analyze_function(&mut self, function: &Function) -> Result<(), SemanticError> {
+        self.check_duplicate_params(function)?;
+        self.analyze_block(&function.body)?;
+        Ok(())
+    }
+
     fn analyze_item(&mut self, item: &Item) -> Result<(), SemanticError> {
         match item {
             Item::Function(function) => {
@@ -182,12 +188,6 @@ impl SemanticAnalyzer {
                 message: format!("duplicate function name: {}", function.name),
             });
         }
-        Ok(())
-    }
-
-    fn analyze_function(&mut self, function: &Function) -> Result<(), SemanticError> {
-        self.check_duplicate_params(function)?;
-        self.analyze_block(&function.body)?;
         Ok(())
     }
 

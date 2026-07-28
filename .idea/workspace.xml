@@ -11,9 +11,8 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="Formatting..">
+    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="semantic tests update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/ast.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/ast.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/semantic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/semantic.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,61 +39,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.4476918257417035" />
-      <entry key="MS500" value="3.448654931532886" />
-      <entry key="S2" value="6.581006789278017" />
-      <entry key="S5" value="8.865683860405545" />
-      <entry key="S10" value="10.896359382368658" />
-      <entry key="S30" value="18.51080276232057" />
-      <entry key="S60" value="32.9479612296835" />
-      <entry key="M2" value="57.16996437007757" />
-      <entry key="M5" value="97.17205156905925" />
-      <entry key="M10" value="143.60786608217094" />
-      <entry key="M15" value="180.6152569347929" />
-      <entry key="M30" value="257.0790766306796" />
-      <entry key="H1" value="356.5604984647895" />
-      <entry key="H2" value="501.70820704903093" />
-      <entry key="H4" value="672.7828482201761" />
-      <entry key="D1" value="951.9030001593944" />
-      <entry key="W1" value="1021.5588286686275" />
+      <entry key="MS100" value="1.0084972599514281" />
+      <entry key="MS500" value="1.693096073035754" />
+      <entry key="S2" value="3.9941436906114096" />
+      <entry key="S5" value="5.776560220331086" />
+      <entry key="S10" value="6.74050412003734" />
+      <entry key="S30" value="7.702411259645142" />
+      <entry key="S60" value="8.168740889286898" />
+      <entry key="M2" value="8.518175024234944" />
+      <entry key="M5" value="8.961642474149624" />
+      <entry key="M10" value="9.875160502569075" />
+      <entry key="M15" value="10.848349966457329" />
+      <entry key="M30" value="13.407320192557632" />
+      <entry key="H1" value="21.483632733759805" />
+      <entry key="H2" value="80.44571908571778" />
+      <entry key="H4" value="259.99299801979066" />
+      <entry key="D1" value="843.7628423463879" />
+      <entry key="W1" value="1048.8124038411088" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
       <entry key="MS500" value="0.0" />
-      <entry key="S2" value="2.0102543587421402E-106" />
-      <entry key="S5" value="5.263812430874346E-43" />
-      <entry key="S10" value="7.255428575967166E-22" />
-      <entry key="S30" value="9.263750091941105E-8" />
-      <entry key="S60" value="3.53093268736169E-4" />
-      <entry key="M2" value="0.025667311703439312" />
-      <entry key="M5" value="0.4849492296409187" />
-      <entry key="M10" value="1.7659613155257992" />
-      <entry key="M15" value="3.0617216796559363" />
-      <entry key="M30" value="6.308428972752413" />
-      <entry key="H1" value="11.341324673732133" />
-      <entry key="H2" value="19.398289851707315" />
-      <entry key="H4" value="29.17397385531543" />
-      <entry key="D1" value="45.260146995560504" />
-      <entry key="W1" value="49.28163466453062" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="1.548006189773167E-220" />
+      <entry key="S60" value="1.7722683650904097E-110" />
+      <entry key="M2" value="2.0423035794577872E-55" />
+      <entry key="M5" value="2.8488844827292305E-22" />
+      <entry key="M10" value="4.209193662664339E-11" />
+      <entry key="M15" value="2.5717676376478154E-7" />
+      <entry key="M30" value="0.0019257782567757972" />
+      <entry key="H1" value="0.20822015100884123" />
+      <entry key="H2" value="2.7195457386700324" />
+      <entry key="H4" value="11.302521827303764" />
+      <entry key="D1" value="41.16450832939293" />
+      <entry key="W1" value="51.932327103458114" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.3803810438610806" />
-      <entry key="MS500" value="3.4161744330357906" />
-      <entry key="S2" value="6.551566623291333" />
-      <entry key="S5" value="8.84505967657684" />
-      <entry key="S10" value="10.880620095346528" />
-      <entry key="S30" value="18.49494787007214" />
-      <entry key="S60" value="32.934338633532604" />
-      <entry key="M2" value="57.18167950860504" />
-      <entry key="M5" value="97.62884034685727" />
-      <entry key="M10" value="145.33390470934734" />
-      <entry key="M15" value="183.63585506739264" />
-      <entry key="M30" value="263.3523376276226" />
-      <entry key="H1" value="367.87424494066875" />
-      <entry key="H2" value="521.0840360190703" />
-      <entry key="H4" value="701.9398576296868" />
-      <entry key="D1" value="997.1586523360119" />
-      <entry key="W1" value="1070.839760024758" />
+      <entry key="MS100" value="0.9408457619486544" />
+      <entry key="MS500" value="1.6249693922747943" />
+      <entry key="S2" value="3.8348003700140465" />
+      <entry key="S5" value="5.664585109726525" />
+      <entry key="S10" value="6.672041339735822" />
+      <entry key="S30" value="7.676057276908029" />
+      <entry key="S60" value="8.154983555811123" />
+      <entry key="M2" value="8.511121521218229" />
+      <entry key="M5" value="8.958751846072888" />
+      <entry key="M10" value="9.873645678846495" />
+      <entry key="M15" value="10.847269583165023" />
+      <entry key="M30" value="13.408568096770427" />
+      <entry key="H1" value="21.691004797880257" />
+      <entry key="H2" value="83.16219412770295" />
+      <entry key="H4" value="271.28929347528253" />
+      <entry key="D1" value="884.9234423548481" />
+      <entry key="W1" value="1100.7440205905386" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -194,7 +193,13 @@
       <workItem from="1783254431214" duration="7000" />
       <workItem from="1784754785710" duration="551000" />
       <workItem from="1784839256458" duration="246000" />
-      <workItem from="1784925838339" duration="659000" />
+      <workItem from="1784925838339" duration="750000" />
+      <workItem from="1784970327336" duration="673000" />
+      <workItem from="1785012403037" duration="550000" />
+      <workItem from="1785066224469" duration="9117000" />
+      <workItem from="1785098704382" duration="7128000" />
+      <workItem from="1785185442110" duration="996000" />
+      <workItem from="1785266651742" duration="535000" />
     </task>
     <task id="LOCAL-00001" summary="postifx assignment parsing">
       <option name="closed" value="true" />
@@ -212,7 +217,39 @@
       <option name="project" value="LOCAL" />
       <updated>1784839421809</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="function semantic check">
+      <option name="closed" value="true" />
+      <created>1784926563192</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1784926563192</updated>
+    </task>
+    <task id="LOCAL-00004" summary="duplicate function params testing">
+      <option name="closed" value="true" />
+      <created>1785012887051</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1785012887051</updated>
+    </task>
+    <task id="LOCAL-00005" summary="semantic analysis update">
+      <option name="closed" value="true" />
+      <created>1785099534165</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1785099534166</updated>
+    </task>
+    <task id="LOCAL-00006" summary="semantic tests update">
+      <option name="closed" value="true" />
+      <created>1785185820656</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1785185820656</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,7 +258,11 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="postifx assignment parsing" />
     <MESSAGE value="Formatting.." />
-    <option name="LAST_COMMIT_MESSAGE" value="Formatting.." />
+    <MESSAGE value="function semantic check" />
+    <MESSAGE value="duplicate function params testing" />
+    <MESSAGE value="semantic analysis update" />
+    <MESSAGE value="semantic tests update" />
+    <option name="LAST_COMMIT_MESSAGE" value="semantic tests update" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
