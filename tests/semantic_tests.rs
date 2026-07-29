@@ -62,3 +62,33 @@ fn rejects_duplicate_function_params() {
     let result = analyze_program(&program);
     assert!(result.is_err(), "expected duplicate parameter error");
 }
+
+#[test]
+fn rejects_unknown_function_call() {
+    let src = r#"
+        fn main() {
+            unknown(1);
+        }
+    "#;
+
+    let program = parse_program(src).unwrap();
+    let result = analyze_program(&program);
+
+    assert!(result.is_err(), "expected unknown function error");
+}
+
+#[test]
+fn rejects_wrong_function_argument_count() {
+    let src = r#"
+        fn pow(base, exp) {}
+
+        fn main() {
+            pow(2);
+        }
+    "#;
+
+    let program = parse_program(src).unwrap();
+    let result = analyze_program(&program);
+
+    assert!(result.is_err(), "expected wrong argument count error");
+}
