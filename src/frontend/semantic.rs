@@ -43,12 +43,6 @@ impl SemanticAnalyzer {
         Ok(())
     }
 
-    fn analyze_function(&mut self, function: &Function) -> Result<(), SemanticError> {
-        self.check_duplicate_params(function)?;
-        self.analyze_block(&function.body)?;
-        Ok(())
-    }
-
     fn analyze_item(&mut self, item: &Item) -> Result<(), SemanticError> {
         match item {
             Item::Function(function) => {
@@ -56,6 +50,12 @@ impl SemanticAnalyzer {
                 Ok(())
             }
         }
+    }
+
+    fn analyze_function(&mut self, function: &Function) -> Result<(), SemanticError> {
+        self.check_duplicate_params(function)?;
+        self.analyze_block(&function.body)?;
+        Ok(())
     }
 
     fn analyze_block(&mut self, block: &Block) -> Result<(), SemanticError> {
@@ -130,25 +130,31 @@ impl SemanticAnalyzer {
                 }
                 Ok(())
             }
+
             Expr::Binary { left, right, .. } => {
                 self.analyze_expr(left)?;
                 self.analyze_expr(right)?;
                 Ok(())
             }
+
             Expr::Unary { expr, .. } => {
                 self.analyze_expr(expr)?;
                 Ok(())
             }
+
             Expr::Member { object, .. } => {
                 self.analyze_expr(object)?;
                 Ok(())
             }
+
             Expr::Index { object, index } => {
                 self.analyze_expr(object)?;
                 self.analyze_expr(index)?;
                 Ok(())
             }
+
             Expr::Identifier(_) => Ok(()),
+
             _ => Ok(()),
         }
     }
@@ -162,11 +168,10 @@ impl SemanticAnalyzer {
             Some(count) => *count,
             None => {
                 return Err(SemanticError {
-                    message: format!("unknown function: {}", name),
+                    message: format!("Unknown function: {}", name),
                 });
             }
         };
-
         if expected_arg_count != actual_arg_count {
             return Err(SemanticError {
                 message: format!(
@@ -175,7 +180,6 @@ impl SemanticAnalyzer {
                 ),
             });
         }
-
         Ok(())
     }
 
@@ -185,7 +189,7 @@ impl SemanticAnalyzer {
             .insert(function.name.clone(), function.params.len());
         if old_value.is_some() {
             return Err(SemanticError {
-                message: format!("duplicate function name: {}", function.name),
+                message: format!("Duplicate function name: {}", function.name),
             });
         }
         Ok(())
