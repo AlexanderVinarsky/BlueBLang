@@ -92,3 +92,17 @@ fn rejects_wrong_function_argument_count() {
 
     assert!(result.is_err(), "expected wrong argument count error");
 }
+
+#[test]
+fn rejects_member_as_call_target() {
+    let src = r#"
+        fn main() {
+            foo.bar(1);
+        }
+    "#;
+
+    let program = parse_program(src).unwrap();
+    let result = analyze_program(&program);
+
+    assert!(result.is_err(), "expected invalid call target error");
+}

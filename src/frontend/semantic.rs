@@ -122,11 +122,10 @@ impl SemanticAnalyzer {
         match expr {
             Expr::Call { callee, args } => {
                 self.analyze_expr(callee)?;
+                let name = self.check_call_target(callee.as_ref())?;
+                self.check_function_call(name, args.len())?;
                 for arg in args {
                     self.analyze_expr(arg)?;
-                }
-                if let Expr::Identifier(name) = callee.as_ref() {
-                    self.check_function_call(name, args.len())?;
                 }
                 Ok(())
             }
@@ -209,6 +208,15 @@ impl SemanticAnalyzer {
             params.insert(param.name.clone());
         }
         Ok(())
+    }
+
+    fn check_call_target<'a>(&self, callee: &'a Expr) -> Result<&'a str, SemanticError> {
+        match callee {
+            Expr::Identifier(name) => Ok(name.as_str()),
+            _ => Err(SemanticError {
+                message: "Call target is invalid".into(),
+            }),
+        }
     }
 }
 
