@@ -163,7 +163,7 @@ impl SemanticAnalyzer {
                 Ok(())
             }
 
-            Expr::Identifier(_) => Ok(()),
+            Expr::Identifier(name) => self.resolve_variable(name),
 
             _ => Ok(()),
         }
@@ -257,6 +257,17 @@ impl SemanticAnalyzer {
             });
         }
         Ok(())
+    }
+
+    fn resolve_variable(&self, name: &str) -> Result<(), SemanticError> {
+        for scope in self.scopes.iter().rev() {
+            if scope.contains(name) {
+                return Ok(());
+            }
+        }
+        Err(SemanticError {
+            message: format!("Unknown variable: {}", name),
+        })
     }
 }
 

@@ -174,3 +174,25 @@ fn accepts_function_parameter_as_local_variable() {
         result.err()
     );
 }
+
+#[test]
+fn rejects_variable_used_outside_its_block_scope() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            {
+                let aydar = 1;
+            }
+            aydar;
+        }
+        "#,
+    )
+        .unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_err(),
+        "expected unknown variable error"
+    );
+}
