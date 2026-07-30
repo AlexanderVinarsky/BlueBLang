@@ -25,6 +25,7 @@ impl SemanticAnalyzer {
                 }
             }
         }
+        self.check_main()?;
         Ok(())
     }
 
@@ -216,6 +217,25 @@ impl SemanticAnalyzer {
             _ => Err(SemanticError {
                 message: "Call target is invalid".into(),
             }),
+        }
+    }
+
+    fn check_main(&self) -> Result<(), SemanticError> {
+        match self.functions.get("main") {
+            None => Err(SemanticError {
+                message: "main function was not found".into(),
+            }),
+            Some(param_count) => {
+                if *param_count != 0 {
+                    return Err(SemanticError {
+                        message: format!(
+                            "main function must have 0 parameters, got {}",
+                            param_count
+                        ),
+                    });
+                }
+                Ok(())
+            }
         }
     }
 }

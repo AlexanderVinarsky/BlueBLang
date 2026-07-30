@@ -43,6 +43,7 @@ fn rejects_duplicate_top_level_function_names() {
 fn accepts_distinct_function_params() {
     let src = r#"
         fn pow(base, exp) {}
+        fn main() {}
     "#;
     let program = parse_program(src).unwrap();
     let result = analyze_program(&program);
@@ -105,4 +106,28 @@ fn rejects_member_as_call_target() {
     let result = analyze_program(&program);
 
     assert!(result.is_err(), "expected invalid call target error");
+}
+
+#[test]
+fn rejects_missing_main_function() {
+    let src = r#"
+        fn kozyavka() {}
+    "#;
+
+    let program = parse_program(src).unwrap();
+    let result = analyze_program(&program);
+
+    assert!(result.is_err(), "expected missing main function error");
+}
+
+#[test]
+fn rejects_main_with_parameters() {
+    let src = r#"
+        fn main(x) {}
+    "#;
+
+    let program = parse_program(src).unwrap();
+    let result = analyze_program(&program);
+
+    assert!(result.is_err(), "expected invalid main signature error");
 }
