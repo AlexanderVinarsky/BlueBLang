@@ -8,12 +8,14 @@ pub struct SemanticError {
 
 pub struct SemanticAnalyzer {
     functions: HashMap<String, usize>,
+    scopes: Vec<HashSet<String>>,
 }
 
 impl SemanticAnalyzer {
     pub fn new() -> Self {
         Self {
             functions: HashMap::new(),
+            scopes: Vec::new(),
         }
     }
 
@@ -55,7 +57,12 @@ impl SemanticAnalyzer {
 
     fn analyze_function(&mut self, function: &Function) -> Result<(), SemanticError> {
         self.check_duplicate_params(function)?;
+        self.scopes.push(HashSet::new());
+        for param in &function.params {
+            self.declare_variable(param.name.as_str())?;
+        }
         self.analyze_block(&function.body)?;
+        self.scopes.pop();
         Ok(())
     }
 
@@ -68,8 +75,9 @@ impl SemanticAnalyzer {
 
     fn analyze_stmt(&mut self, stmt: &Stmt) -> Result<(), SemanticError> {
         match stmt {
-            Stmt::Let { value, .. } => {
+            Stmt::Let { value, name } => {
                 self.analyze_expr(value)?;
+                self.declare_variable(name.as_str())?;
                 Ok(())
             }
 
@@ -92,7 +100,9 @@ impl SemanticAnalyzer {
             }
 
             Stmt::Block(block) => {
+                self.scopes.push(HashSet::new());
                 self.analyze_block(block)?;
+                self.scopes.pop();
                 Ok(())
             }
 
@@ -223,13 +233,13 @@ impl SemanticAnalyzer {
     fn check_main(&self) -> Result<(), SemanticError> {
         match self.functions.get("main") {
             None => Err(SemanticError {
-                message: "main function was not found".into(),
+                message: "Main function was not found".into(),
             }),
             Some(param_count) => {
                 if *param_count != 0 {
                     return Err(SemanticError {
                         message: format!(
-                            "main function must have 0 parameters, got {}",
+                            "Main function must have 0 parameters, got {}",
                             param_count
                         ),
                     });
@@ -237,6 +247,16 @@ impl SemanticAnalyzer {
                 Ok(())
             }
         }
+    }
+
+    fn declare_variable(&mut self, name: &str) -> Result<(), SemanticError> {
+        let scope = self.scopes.last_mut().expect("No active scope");
+        if !scope.insert(name.to_string()) {
+            return Err(SemanticError {
+                message: format!("Duplicate variable name: {}", name),
+            });
+        }
+        Ok(())
     }
 }
 

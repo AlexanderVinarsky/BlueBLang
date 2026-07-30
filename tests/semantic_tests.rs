@@ -131,3 +131,46 @@ fn rejects_main_with_parameters() {
 
     assert!(result.is_err(), "expected invalid main signature error");
 }
+
+#[test]
+fn accepts_declared_local_variable() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            let x = 1;
+            x;
+        }
+        "#,
+    )
+    .unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_ok(),
+        "expected semantic success, got: {:?}",
+        result.err()
+    );
+}
+
+#[test]
+fn accepts_function_parameter_as_local_variable() {
+    let program = parse_program(
+        r#"
+        fn main() {}
+
+        fn foo(x) {
+            x;
+        }
+        "#,
+    )
+    .unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_ok(),
+        "expected semantic success, got: {:?}",
+        result.err()
+    );
+}
