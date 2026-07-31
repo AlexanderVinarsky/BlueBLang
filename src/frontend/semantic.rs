@@ -132,7 +132,6 @@ impl SemanticAnalyzer {
     fn analyze_expr(&mut self, expr: &Expr) -> Result<(), SemanticError> {
         match expr {
             Expr::Call { callee, args } => {
-                self.analyze_expr(callee)?;
                 let name = self.check_call_target(callee.as_ref())?;
                 self.check_function_call(name, args.len())?;
                 for arg in args {
