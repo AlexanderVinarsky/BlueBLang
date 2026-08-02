@@ -94,7 +94,7 @@ impl SemanticAnalyzer {
             }
 
             Stmt::Assign { target, value } => {
-                self.analyze_expr(target)?;
+                self.analyze_assignment_target(target)?;
                 self.analyze_expr(value)?;
                 Ok(())
             }
@@ -267,6 +267,24 @@ impl SemanticAnalyzer {
         Err(SemanticError {
             message: format!("Unknown variable: {}", name),
         })
+    }
+
+    fn analyze_assignment_target(&mut self, target: &Expr) -> Result<(), SemanticError> {
+        match target {
+            Expr::Identifier(name) => self.resolve_variable(name),
+            Expr::Member { object, .. } => {
+                self.analyze_expr(object)?;
+                Ok(())
+            }
+            Expr::Index { object, index } => {
+                self.analyze_expr(object)?;
+                self.analyze_expr(index)?;
+                Ok(())
+            }
+            _ => Err(SemanticError {
+                message: "Invalid assignment target".into(),
+            }),
+        }
     }
 }
 
