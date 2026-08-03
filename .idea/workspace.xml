@@ -11,9 +11,9 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="analyze_expr  fix">
+    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="assignment target check in semantic">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/semantic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/semantic.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/semantic_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/semantic_tests.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,61 +36,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.198186650954243" />
-      <entry key="MS500" value="1.963473131971415" />
-      <entry key="S2" value="3.2424446117985615" />
-      <entry key="S5" value="4.4196269259747245" />
-      <entry key="S10" value="5.092025434993183" />
-      <entry key="S30" value="5.670543698861764" />
-      <entry key="S60" value="6.079013582785173" />
-      <entry key="M2" value="9.543603515472501" />
-      <entry key="M5" value="30.923226312463303" />
-      <entry key="M10" value="59.56393729819079" />
-      <entry key="M15" value="79.3496955454481" />
-      <entry key="M30" value="119.52883298411078" />
-      <entry key="H1" value="164.66052781197817" />
-      <entry key="H2" value="207.60843676447732" />
-      <entry key="H4" value="283.82821007339504" />
-      <entry key="D1" value="945.3553601750467" />
-      <entry key="W1" value="1364.992067483885" />
+      <entry key="MS100" value="1.724486973217127" />
+      <entry key="MS500" value="2.616300565464808" />
+      <entry key="S2" value="3.0545394936634196" />
+      <entry key="S5" value="4.509994151083721" />
+      <entry key="S10" value="6.7890973768297815" />
+      <entry key="S30" value="10.946359429949577" />
+      <entry key="S60" value="13.702801018330172" />
+      <entry key="M2" value="17.98913524827135" />
+      <entry key="M5" value="37.99258685500038" />
+      <entry key="M10" value="66.73387885812681" />
+      <entry key="M15" value="87.12507557411237" />
+      <entry key="M30" value="128.55758231117977" />
+      <entry key="H1" value="174.91318549723314" />
+      <entry key="H2" value="218.87296383425493" />
+      <entry key="H4" value="295.6420085320618" />
+      <entry key="D1" value="957.6984484417857" />
+      <entry key="W1" value="1377.856599558547" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="2.1465558677286956E-250" />
-      <entry key="S2" value="3.8276793488844525E-63" />
-      <entry key="S5" value="1.079379634470139E-25" />
-      <entry key="S10" value="3.2853913533552424E-13" />
-      <entry key="S30" value="6.90021098100152E-5" />
-      <entry key="S60" value="0.00830676368671936" />
-      <entry key="M2" value="0.09125465299365208" />
-      <entry key="M5" value="0.410828658118778" />
-      <entry key="M10" value="0.8263535025843092" />
-      <entry key="M15" value="1.2198429250963523" />
-      <entry key="M30" value="2.4362947696553174" />
-      <entry key="H1" value="4.281335355491065" />
-      <entry key="H2" value="6.177608497908146" />
-      <entry key="H4" value="9.290385527381316" />
-      <entry key="D1" value="39.94912754600899" />
-      <entry key="W1" value="60.455697795895055" />
+      <entry key="MS500" value="1.8103700919221117E-302" />
+      <entry key="S2" value="3.668105698118336E-76" />
+      <entry key="S5" value="6.6954032168916175E-31" />
+      <entry key="S10" value="8.18254435789481E-16" />
+      <entry key="S30" value="9.35325531570909E-6" />
+      <entry key="S60" value="0.0030583139483197283" />
+      <entry key="M2" value="0.055370713888398204" />
+      <entry key="M5" value="0.3364114531433363" />
+      <entry key="M10" value="0.7477749168471591" />
+      <entry key="M15" value="1.1412319604788124" />
+      <entry key="M30" value="2.356485869242609" />
+      <entry key="H1" value="4.210626804296466" />
+      <entry key="H2" value="6.126382852649755" />
+      <entry key="H4" value="9.251786717180181" />
+      <entry key="D1" value="39.921416730289664" />
+      <entry key="W1" value="60.44970526402328" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.3824338206620247" />
-      <entry key="MS500" value="1.6738268870622808" />
-      <entry key="S2" value="3.1574958583484745" />
-      <entry key="S5" value="4.383393933140872" />
-      <entry key="S10" value="5.0733438300234015" />
-      <entry key="S30" value="5.664200894602816" />
-      <entry key="S60" value="6.082460692672237" />
-      <entry key="M2" value="9.620129792269907" />
-      <entry key="M5" value="31.2971066499212" />
-      <entry key="M10" value="60.35223476575041" />
-      <entry key="M15" value="80.53589375452106" />
-      <entry key="M30" value="121.94054327553333" />
-      <entry key="H1" value="168.92538124626898" />
-      <entry key="H2" value="213.7758612733629" />
-      <entry key="H4" value="293.11177948952576" />
-      <entry key="D1" value="985.300385087327" />
-      <entry key="W1" value="1425.4468919438966" />
+      <entry key="MS100" value="1.3048264009364134" />
+      <entry key="MS500" value="1.7967176190899434" />
+      <entry key="S2" value="2.184184160701435" />
+      <entry key="S5" value="3.8931153340742672" />
+      <entry key="S10" value="6.400682165537494" />
+      <entry key="S30" value="10.792532141152172" />
+      <entry key="S60" value="13.62418084733883" />
+      <entry key="M2" value="17.994732886835067" />
+      <entry key="M5" value="38.28218883798906" />
+      <entry key="M10" value="67.4389025151117" />
+      <entry key="M15" value="88.22928007021046" />
+      <entry key="M30" value="130.8875094414581" />
+      <entry key="H1" value="179.10621174795162" />
+      <entry key="H2" value="224.98855146554703" />
+      <entry key="H4" value="304.8866595523048" />
+      <entry key="D1" value="997.6157073910333" />
+      <entry key="W1" value="1438.3054232883017" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -197,7 +197,9 @@
       <workItem from="1785098704382" duration="7128000" />
       <workItem from="1785185442110" duration="996000" />
       <workItem from="1785266651742" duration="535000" />
-      <workItem from="1785696334225" duration="495000" />
+      <workItem from="1785696334225" duration="574000" />
+      <workItem from="1785733210849" duration="4424000" />
+      <workItem from="1785761881916" duration="4941000" />
     </task>
     <task id="LOCAL-00001" summary="postifx assignment parsing">
       <option name="closed" value="true" />
@@ -279,7 +281,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785530903641</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="assignment target check in semantic">
+      <option name="closed" value="true" />
+      <created>1785696857272</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1785696857272</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -296,7 +306,8 @@
     <MESSAGE value="call semantic check and testing" />
     <MESSAGE value="semantic declared variable check and testing" />
     <MESSAGE value="analyze_expr  fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="analyze_expr  fix" />
+    <MESSAGE value="assignment target check in semantic" />
+    <option name="LAST_COMMIT_MESSAGE" value="assignment target check in semantic" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

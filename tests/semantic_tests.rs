@@ -9,8 +9,7 @@ fn accepts_distinct_top_level_functions() {
         fn foo() { ret; }
         fn bar() { ret; }
         "#,
-    )
-    .unwrap();
+    ).unwrap();
 
     let result = analyze_program(&program);
 
@@ -28,8 +27,7 @@ fn rejects_duplicate_top_level_function_names() {
         fn main() { ret; }
         fn main() { ret; }
         "#,
-    )
-    .unwrap();
+    ).unwrap();
 
     let result = analyze_program(&program);
 
@@ -141,8 +139,7 @@ fn accepts_declared_local_variable() {
             x;
         }
         "#,
-    )
-    .unwrap();
+    ).unwrap();
 
     let result = analyze_program(&program);
 
@@ -163,8 +160,7 @@ fn accepts_function_parameter_as_local_variable() {
             x;
         }
         "#,
-    )
-    .unwrap();
+    ).unwrap();
 
     let result = analyze_program(&program);
 
@@ -186,8 +182,7 @@ fn rejects_variable_used_outside_its_block_scope() {
             aydar;
         }
         "#,
-    )
-        .unwrap();
+    ).unwrap();
 
     let result = analyze_program(&program);
 
@@ -195,4 +190,35 @@ fn rejects_variable_used_outside_its_block_scope() {
         result.is_err(),
         "expected unknown variable error"
     );
+}
+
+#[test]
+fn accepts_assignment_to_declared_variable() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            let x = 1;
+            x = 2;
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(result.is_ok(), "expected semantic success, got: {:?}", result.err());
+}
+
+#[test]
+fn rejects_assignment_to_undeclared_variable() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            x = 1;
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(result.is_err(), "expected assignment to undeclared variable error");
 }
