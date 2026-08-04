@@ -11,6 +11,13 @@ pub struct SemanticAnalyzer {
     scopes: Vec<HashSet<String>>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum Type {
+    Int,
+    Bool,
+    Unit,
+}
+
 impl SemanticAnalyzer {
     pub fn new() -> Self {
         Self {
@@ -76,8 +83,8 @@ impl SemanticAnalyzer {
     fn analyze_stmt(&mut self, stmt: &Stmt) -> Result<(), SemanticError> {
         match stmt {
             Stmt::Let { value, name } => {
-                self.analyze_expr(value)?;
-                self.declare_variable(name.as_str())?;
+                let value_type = self.analyze_expr(value)?;
+                self.declare_variable(name.as_str(), value_type)?;
                 Ok(())
             }
 
@@ -94,13 +101,16 @@ impl SemanticAnalyzer {
             }
 
             Stmt::Assign { target, value } => {
-                self.analyze_assignment_target(target)?;
-                self.analyze_expr(value)?;
+                let target_type = self.analyze_assignment_target(target)?;
+                let value_type = self.analyze_expr(value)?;
+
+                self.expect_same_type(&target_type, &value_type, "assignment")?;
+
                 Ok(())
             }
 
             Stmt::Block(block) => {
-                self.scopes.push(HashSet::new());
+                self.scopes.push(HashMap::new());
                 self.analyze_block(block)?;
                 self.scopes.pop();
                 Ok(())
@@ -111,17 +121,22 @@ impl SemanticAnalyzer {
                 then_branch,
                 else_branch,
             } => {
-                self.analyze_expr(condition)?;
+                let condition_type = self.analyze_expr(condition)?;
+                self.expect_type(&condition_type, &Type::Bool, "if condition")?;
+
                 self.analyze_stmt(then_branch.as_ref())?;
 
                 if let Some(else_branch) = else_branch {
                     self.analyze_stmt(else_branch.as_ref())?;
                 }
+
                 Ok(())
             }
 
             Stmt::While { condition, body } => {
-                self.analyze_expr(condition)?;
+                let condition_type = self.analyze_expr(condition)?;
+                self.expect_type(&condition_type, &Type::Bool, "while condition")?;
+
                 self.analyze_stmt(body.as_ref())?;
 
                 Ok(())
@@ -285,6 +300,31 @@ impl SemanticAnalyzer {
                 message: "Invalid assignment target".into(),
             }),
         }
+    }
+
+    fn expect_type(&self, actual: &Type, expected: &Type, context: &str) -> Result<(), SemanticError> {
+        if actual != expected {
+            return Err(SemanticError {
+                message: format!(
+                    "Type mismatch in {}: expected {:?}, got {:?}",
+                    context, expected, actual
+                ),
+            });
+        }
+        Ok(())
+    }
+
+    fn expect_same_type(&self, left: &Type, right: &Type, context: &str) -> Result<(), SemanticError> {
+        if left != right {
+            return Err(SemanticError {
+                message: format!(
+                    "Type mismatch in {}: left is {:?}, right is {:?}",
+                    context, left, right
+                ),
+            });
+        }
+
+        Ok(())
     }
 }
 
