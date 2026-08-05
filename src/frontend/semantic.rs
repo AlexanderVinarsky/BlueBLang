@@ -66,7 +66,7 @@ impl SemanticAnalyzer {
         self.check_duplicate_params(function)?;
         self.scopes.push(HashMap::new());
         for param in &function.params {
-            self.declare_variable(param.name.as_str())?;
+            self.declare_variable(param.name.as_str(), Type::Int)?;                 // !!!
         }
         self.analyze_block(&function.body)?;
         self.scopes.pop();
@@ -298,20 +298,21 @@ impl SemanticAnalyzer {
         }
     }
 
-    fn declare_variable(&mut self, name: &str, ty: &Type) -> Result<(), SemanticError> {
+    fn declare_variable(&mut self, name: &str, ty: Type) -> Result<(), SemanticError> {
         let scope = self.scopes.last_mut().expect("No active scope");
-        if !scope.insert(name.to_string(), ty) {
+        if scope.contains_key(name) {
             return Err(SemanticError {
                 message: format!("Duplicate variable name: {}", name),
             });
         }
+        scope.insert(name.to_string(), ty);
         Ok(())
     }
 
-    fn resolve_variable(&self, name: &str) -> Result<(), SemanticError> {
+    fn resolve_variable(&self, name: &str) -> Result<Type, SemanticError> {
         for scope in self.scopes.iter().rev() {
-            if scope.contains_key(name) {
-                return Ok(());
+            if let Some(ty) = scope.get(name) {
+                return Ok(ty.clone());
             }
         }
         Err(SemanticError {
@@ -319,17 +320,17 @@ impl SemanticAnalyzer {
         })
     }
 
-    fn analyze_assignment_target(&mut self, target: &Expr) -> Result<(), SemanticError> {
+    fn analyze_assignment_target(&mut self, target: &Expr) -> Result<Type, SemanticError> {
         match target {
             Expr::Identifier(name) => self.resolve_variable(name),
             Expr::Member { object, .. } => {
                 self.analyze_expr(object)?;
-                Ok(())
+                Ok(Type::Int)                                                               // !!!
             }
             Expr::Index { object, index } => {
                 self.analyze_expr(object)?;
                 self.analyze_expr(index)?;
-                Ok(())
+                Ok(Type::Int)                                                               // !!!
             }
             _ => Err(SemanticError {
                 message: "Invalid assignment target".into(),
