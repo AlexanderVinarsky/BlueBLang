@@ -9,7 +9,8 @@ fn accepts_distinct_top_level_functions() {
         fn foo() { ret; }
         fn bar() { ret; }
         "#,
-    ).unwrap();
+    )
+    .unwrap();
 
     let result = analyze_program(&program);
 
@@ -27,7 +28,8 @@ fn rejects_duplicate_top_level_function_names() {
         fn main() { ret; }
         fn main() { ret; }
         "#,
-    ).unwrap();
+    )
+    .unwrap();
 
     let result = analyze_program(&program);
 
@@ -139,7 +141,8 @@ fn accepts_declared_local_variable() {
             x;
         }
         "#,
-    ).unwrap();
+    )
+    .unwrap();
 
     let result = analyze_program(&program);
 
@@ -160,7 +163,8 @@ fn accepts_function_parameter_as_local_variable() {
             x;
         }
         "#,
-    ).unwrap();
+    )
+    .unwrap();
 
     let result = analyze_program(&program);
 
@@ -182,14 +186,12 @@ fn rejects_variable_used_outside_its_block_scope() {
             aydar;
         }
         "#,
-    ).unwrap();
+    )
+    .unwrap();
 
     let result = analyze_program(&program);
 
-    assert!(
-        result.is_err(),
-        "expected unknown variable error"
-    );
+    assert!(result.is_err(), "expected unknown variable error");
 }
 
 #[test]
@@ -201,11 +203,16 @@ fn accepts_assignment_to_declared_variable() {
             x = 2;
         }
         "#,
-    ).unwrap();
+    )
+    .unwrap();
 
     let result = analyze_program(&program);
 
-    assert!(result.is_ok(), "expected semantic success, got: {:?}", result.err());
+    assert!(
+        result.is_ok(),
+        "expected semantic success, got: {:?}",
+        result.err()
+    );
 }
 
 #[test]
@@ -216,9 +223,71 @@ fn rejects_assignment_to_undeclared_variable() {
             x = 1;
         }
         "#,
-    ).unwrap();
+    )
+    .unwrap();
 
     let result = analyze_program(&program);
 
-    assert!(result.is_err(), "expected assignment to undeclared variable error");
+    assert!(
+        result.is_err(),
+        "expected assignment to undeclared variable error"
+    );
+}
+
+#[test]
+fn accepts_basic_typed_expressions() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            let kozyava = 1 + 2;
+            let ok = kozyava < 10;
+
+            if ok {
+                ret;
+            }
+        }
+        "#,
+    )
+    .unwrap();
+    let result = analyze_program(&program);
+    assert!(
+        result.is_ok(),
+        "expected semantic success, got: {:?}",
+        result.err()
+    );
+}
+
+#[test]
+fn rejects_non_bool_if_condition() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            if 123 {
+                ret;
+            }
+        }
+        "#,
+    )
+    .unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(result.is_err(), "expected if condition type error");
+}
+
+#[test]
+fn rejects_assignment_type_mismatch() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            let x = 1;
+            x = true;
+        }
+        "#,
+    )
+    .unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(result.is_err(), "expected assignment type mismatch error");
 }
