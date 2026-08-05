@@ -1,4 +1,4 @@
-use super::ast::{Block, Expr, Function, Item, Program, Stmt};
+use super::ast::{BinaryOp, Block, Expr, Function, Item, Program, Stmt, UnaryOp};
 use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -8,7 +8,7 @@ pub struct SemanticError {
 
 pub struct SemanticAnalyzer {
     functions: HashMap<String, usize>,
-    scopes: Vec<HashSet<String>>,
+    scopes: Vec<HashMap<String, Type>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -64,7 +64,7 @@ impl SemanticAnalyzer {
 
     fn analyze_function(&mut self, function: &Function) -> Result<(), SemanticError> {
         self.check_duplicate_params(function)?;
-        self.scopes.push(HashSet::new());
+        self.scopes.push(HashMap::new());
         for param in &function.params {
             self.declare_variable(param.name.as_str())?;
         }
@@ -123,9 +123,7 @@ impl SemanticAnalyzer {
             } => {
                 let condition_type = self.analyze_expr(condition)?;
                 self.expect_type(&condition_type, &Type::Bool, "if condition")?;
-
                 self.analyze_stmt(then_branch.as_ref())?;
-
                 if let Some(else_branch) = else_branch {
                     self.analyze_stmt(else_branch.as_ref())?;
                 }
@@ -136,15 +134,13 @@ impl SemanticAnalyzer {
             Stmt::While { condition, body } => {
                 let condition_type = self.analyze_expr(condition)?;
                 self.expect_type(&condition_type, &Type::Bool, "while condition")?;
-
                 self.analyze_stmt(body.as_ref())?;
-
                 Ok(())
             }
         }
     }
 
-    fn analyze_expr(&mut self, expr: &Expr) -> Result<(), SemanticError> {
+    fn analyze_expr(&mut self, expr: &Expr) -> Result<Type, SemanticError> {
         match expr {
             Expr::Call { callee, args } => {
                 let name = self.check_call_target(callee.as_ref())?;
@@ -152,34 +148,73 @@ impl SemanticAnalyzer {
                 for arg in args {
                     self.analyze_expr(arg)?;
                 }
-                Ok(())
+                Ok(Type::Unit)
             }
 
-            Expr::Binary { left, right, .. } => {
-                self.analyze_expr(left)?;
-                self.analyze_expr(right)?;
-                Ok(())
+            Expr::Binary { left, op, right} => {
+                let left_type = self.analyze_expr(left)?;
+                let right_type = self.analyze_expr(right)?;
+
+                match op {
+                    BinaryOp::Plus | BinaryOp::Minus | BinaryOp::Star | BinaryOp::Slash => {
+                        self.expect_type(&left_type, &Type::Int, "left operand")?;
+                        self.expect_type(&right_type, &Type::Int, "right operand")?;
+                        Ok(Type::Int)
+                    }
+
+                    BinaryOp::EqualEqual | BinaryOp::BangEqual => {
+                        self.expect_same_type(&left_type, &right_type, "equality operands")?;
+                        Ok(Type::Bool)
+                    }
+
+                    BinaryOp::Less | BinaryOp::LessEqual | BinaryOp::Greater | BinaryOp::GreaterEqual => {
+                        self.expect_type(&left_type, &Type::Int, "left operand")?;
+                        self.expect_type(&right_type, &Type::Int, "right operand")?;
+                        Ok(Type::Bool)
+                    }
+
+                    BinaryOp::And | BinaryOp::Or => {
+                        self.expect_type(&left_type, &Type::Bool, "left operand")?;
+                        self.expect_type(&right_type, &Type::Bool, "right operand")?;
+                        Ok(Type::Bool)
+                    }
+                }
             }
 
-            Expr::Unary { expr, .. } => {
-                self.analyze_expr(expr)?;
-                Ok(())
+            Expr::Unary {op, expr} => {
+                let expr_type = self.analyze_expr(expr)?;
+                match op {
+                    UnaryOp::Bang => {
+                        self.expect_type(&expr_type, &Type::Bool, "unary ! operand")?;
+                        Ok(Type::Bool)
+                    }
+
+                    UnaryOp::Minus => {
+                        self.expect_type(&expr_type, &Type::Int, "unary - operand")?;
+                        Ok(Type::Int)
+                    }
+                }
             }
 
             Expr::Member { object, .. } => {
                 self.analyze_expr(object)?;
-                Ok(())
+                Ok(Type::Int)                                           // !!!
             }
 
             Expr::Index { object, index } => {
                 self.analyze_expr(object)?;
-                self.analyze_expr(index)?;
-                Ok(())
+                let index_type = self.analyze_expr(index)?;
+                self.expect_type(&index_type, &Type::Int, "index expression")?;
+                Ok(Type::Int)                                           // !!!
             }
 
             Expr::Identifier(name) => self.resolve_variable(name),
 
-            _ => Ok(()),
+            Expr::Number(_) => Ok(Type::Int),
+
+            Expr::Bool(_) => Ok(Type::Bool),
+
+            _ => Ok(Type::Unit)
         }
     }
 
@@ -263,9 +298,9 @@ impl SemanticAnalyzer {
         }
     }
 
-    fn declare_variable(&mut self, name: &str) -> Result<(), SemanticError> {
+    fn declare_variable(&mut self, name: &str, ty: &Type) -> Result<(), SemanticError> {
         let scope = self.scopes.last_mut().expect("No active scope");
-        if !scope.insert(name.to_string()) {
+        if !scope.insert(name.to_string(), ty) {
             return Err(SemanticError {
                 message: format!("Duplicate variable name: {}", name),
             });
@@ -275,7 +310,7 @@ impl SemanticAnalyzer {
 
     fn resolve_variable(&self, name: &str) -> Result<(), SemanticError> {
         for scope in self.scopes.iter().rev() {
-            if scope.contains(name) {
+            if scope.contains_key(name) {
                 return Ok(());
             }
         }
