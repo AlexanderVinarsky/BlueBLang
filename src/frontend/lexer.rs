@@ -130,11 +130,19 @@ impl Lexer {
                 }
 
                 '-' => {
-                    tokens.push(Token {
-                        kind: TokenKind::Minus,
-                        text: "-".to_string(),
-                    });
-                    self.pos += 1;
+                    if self.next_is('>') {
+                        tokens.push(Token {
+                            kind: TokenKind::Arrow,
+                            text: "->".to_string(),
+                        });
+                        self.pos += 2;
+                    } else {
+                        tokens.push(Token {
+                            kind: TokenKind::Minus,
+                            text: "-".to_string(),
+                        });
+                        self.pos += 1;
+                    }
                 }
 
                 '*' => {

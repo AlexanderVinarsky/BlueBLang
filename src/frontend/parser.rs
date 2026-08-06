@@ -137,14 +137,32 @@ impl Parser {
         let name = self.expect_identifier()?;
 
         self.expect_kind(TokenKind::LParen)?;
-
         let params = self.parse_params()?;
-
         self.expect_kind(TokenKind::RParen)?;
 
+        let return_type = if self.check_kind(TokenKind::Arrow) {
+            self.parse_type_annotation()?
+        }
+        else {
+            TypeAnnotation::Unit
+        };
         let body = self.parse_block()?;
+        Ok(Function { name, params, return_type, body })
+    }
 
-        Ok(Function { name, params, body })
+    fn parse_type_annotation(&mut self) -> Result<TypeAnnotation, ParseError> {
+        let name = self.expect_identifier()?;
+
+        match name.as_str() {
+            "int" => Ok(TypeAnnotation::Int),
+            "bool" => Ok(TypeAnnotation::Bool),
+            "string" => Ok(TypeAnnotation::String),
+            "unit" => Ok(TypeAnnotation::Unit),
+
+            _ => Err(ParseError {
+                message: format!("unknown type `{}`", name),
+            }),
+        }
     }
 
     fn parse_params(&mut self) -> Result<Vec<Param>, ParseError> {

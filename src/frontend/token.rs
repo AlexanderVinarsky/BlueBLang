@@ -44,6 +44,7 @@ pub enum TokenKind {
     Semicolon,
 
     Fn,
+    Arrow,
 
     Eof,
     Unknown,

@@ -12,6 +12,7 @@ pub enum Item {
 pub struct Function {
     pub name: String,
     pub params: Vec<Param>,
+    pub return_type: TypeAnnotation,
     pub body: Block,
 }
 
@@ -111,4 +112,12 @@ pub enum BinaryOp {
 pub enum UnaryOp {
     Minus,
     Bang,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum TypeAnnotation {
+    Int,
+    Bool,
+    String,
+    Unit
 }
