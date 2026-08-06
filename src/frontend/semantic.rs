@@ -1,4 +1,4 @@
-use super::ast::{BinaryOp, Block, Expr, Function, Item, Program, Stmt, UnaryOp};
+use super::ast::{BinaryOp, Block, Expr, Function, Item, Program, Stmt, TypeAnnotation, UnaryOp};
 use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -14,12 +14,14 @@ pub struct FunctionInfo {
 pub struct SemanticAnalyzer {
     functions: HashMap<String, FunctionInfo>,
     scopes: Vec<HashMap<String, Type>>,
+    current_return_type: Option<Type>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum Type {
     Int,
     Bool,
+    String,
     Unit,
 }
 
@@ -28,6 +30,7 @@ impl SemanticAnalyzer {
         Self {
             functions: HashMap::new(),
             scopes: Vec::new(),
+            current_return_type: None
         }
     }
 
@@ -69,12 +72,15 @@ impl SemanticAnalyzer {
 
     fn analyze_function(&mut self, function: &Function) -> Result<(), SemanticError> {
         self.check_duplicate_params(function)?;
+        let return_type = self.type_annotation_to_type(&function.return_type);
+        let previous_return_type = self.current_return_type.replace(return_type);
         self.scopes.push(HashMap::new());
         for param in &function.params {
             self.declare_variable(param.name.as_str(), Type::Int)?;                 // !!!
         }
         self.analyze_block(&function.body)?;
         self.scopes.pop();
+        self.current_return_type = previous_return_type;
         Ok(())
     }
 
@@ -99,10 +105,20 @@ impl SemanticAnalyzer {
             }
 
             Stmt::Return(expr) => {
-                if let Some(expr) = expr {
-                    self.analyze_expr(expr)?;
+                let expected = self.current_return_type.clone().expect("return outside function");
+
+                match expr {
+                    Some(expr) => {
+                        let actual = self.analyze_expr(expr)?;
+                        self.expect_type(&actual, &expected, "return value")?;
+                        Ok(())
+                    }
+
+                    None => {
+                        self.expect_type(&Type::Unit, &expected, "return value")?;
+                        Ok(())
+                    }
                 }
-                Ok(())
             }
 
             Stmt::Assign { target, value } => {
@@ -364,6 +380,15 @@ impl SemanticAnalyzer {
         }
 
         Ok(())
+    }
+
+    fn type_annotation_to_type(&self, ty: &TypeAnnotation) -> Type {
+        match ty {
+            TypeAnnotation::Int => Type::Int,
+            TypeAnnotation::Bool => Type::Bool,
+            TypeAnnotation::String => Type::String,
+            TypeAnnotation::Unit => Type::Unit,
+        }
     }
 }
 
