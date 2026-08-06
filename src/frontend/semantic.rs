@@ -6,8 +6,13 @@ pub struct SemanticError {
     pub message: String,
 }
 
+pub struct FunctionInfo {
+    param_count: usize,
+    return_type: Type,
+}
+
 pub struct SemanticAnalyzer {
-    functions: HashMap<String, usize>,
+    functions: HashMap<String, FunctionInfo>,
     scopes: Vec<HashMap<String, Type>>,
 }
 
@@ -218,39 +223,37 @@ impl SemanticAnalyzer {
         }
     }
 
-    fn check_function_call(
-        &self,
-        name: &str,
-        actual_arg_count: usize,
-    ) -> Result<(), SemanticError> {
-        let expected_arg_count = match self.functions.get(name) {
-            Some(count) => *count,
+    fn check_function_call(&self, name: &str, actual_arg_count: usize) -> Result<Type, SemanticError> {
+        let info = match self.functions.get(name) {
+            Some(info) => info,
             None => {
                 return Err(SemanticError {
                     message: format!("Unknown function: {}", name),
                 });
             }
         };
-        if expected_arg_count != actual_arg_count {
+        if info.param_count != actual_arg_count {
             return Err(SemanticError {
                 message: format!(
                     "Wrong number of arguments for function `{}`. Expected {}, got {}",
-                    name, expected_arg_count, actual_arg_count
+                    name, info.param_count, actual_arg_count
                 ),
             });
         }
-        Ok(())
+        Ok(info.return_type.clone())
     }
 
     fn register_function(&mut self, function: &Function) -> Result<(), SemanticError> {
-        let old_value = self
-            .functions
-            .insert(function.name.clone(), function.params.len());
-        if old_value.is_some() {
+        if self.functions.contains_key(&function.name) {
             return Err(SemanticError {
                 message: format!("Duplicate function name: {}", function.name),
             });
         }
+        let info = FunctionInfo {
+            param_count: function.params.len(),
+            return_type: Type::Unit,
+        };
+        self.functions.insert(function.name.clone(), info);
         Ok(())
     }
 
@@ -284,12 +287,12 @@ impl SemanticAnalyzer {
             None => Err(SemanticError {
                 message: "Main function was not found".into(),
             }),
-            Some(param_count) => {
-                if *param_count != 0 {
+            Some(info) => {
+                if info.param_count != 0 {
                     return Err(SemanticError {
                         message: format!(
                             "Main function must have 0 parameters, got {}",
-                            param_count
+                            info.param_count
                         ),
                     });
                 }

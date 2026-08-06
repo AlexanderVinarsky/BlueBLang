@@ -291,3 +291,25 @@ fn rejects_assignment_type_mismatch() {
 
     assert!(result.is_err(), "expected assignment type mismatch error");
 }
+
+#[test]
+fn rejects_unit_function_call_as_if_condition() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            if helper() {
+                ret;
+            }
+        }
+
+        fn helper() {}
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_err(),
+        "expected Unit function call to be rejected as if condition"
+    );
+}
