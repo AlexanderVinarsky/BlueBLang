@@ -313,3 +313,91 @@ fn rejects_unit_function_call_as_if_condition() {
         "expected Unit function call to be rejected as if condition"
     );
 }
+
+#[test]
+fn accepts_int_return_value() {
+    let src = r#"
+    fn main() {}
+
+    fn answer() -> int {
+        ret 67;
+    }
+    "#;
+
+    let program = match parse_program(src) {
+        Ok(program) => program,
+        Err(err) => {
+            panic!("parse failed: {:?}", err);
+        }
+    };
+
+    println!("program AST: {:#?}", program);
+
+    let result = analyze_program(&program);
+
+    println!("semantic result: {:#?}", result);
+
+    assert!(
+        result.is_ok(),
+        "expected semantic success, got: {:?}",
+        result.err()
+    );
+}
+
+#[test]
+fn rejects_missing_value_for_int_return() {
+    let program = parse_program(
+        r#"
+        fn main() {}
+
+        fn kozyava() -> int {
+            ret;
+        }
+        "#,
+    )
+        .unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_err(),
+        "expected return type mismatch error"
+    );
+}
+
+#[test]
+fn rejects_value_return_from_unit_function() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            ret 1;
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_err(),
+        "expected unit function to reject value return"
+    );
+}
+
+#[test]
+fn accepts_unit_return_without_value() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            ret;
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_ok(),
+        "expected semantic success, got: {:?}",
+        result.err()
+    );
+}

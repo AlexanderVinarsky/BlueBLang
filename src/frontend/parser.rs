@@ -141,9 +141,9 @@ impl Parser {
         self.expect_kind(TokenKind::RParen)?;
 
         let return_type = if self.check_kind(TokenKind::Arrow) {
+            self.expect_kind(TokenKind::Arrow)?;
             self.parse_type_annotation()?
-        }
-        else {
+        } else {
             TypeAnnotation::Unit
         };
         let body = self.parse_block()?;
