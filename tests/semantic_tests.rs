@@ -331,11 +331,7 @@ fn accepts_int_return_value() {
         }
     };
 
-    println!("program AST: {:#?}", program);
-
     let result = analyze_program(&program);
-
-    println!("semantic result: {:#?}", result);
 
     assert!(
         result.is_ok(),
@@ -399,5 +395,25 @@ fn accepts_unit_return_without_value() {
         result.is_ok(),
         "expected semantic success, got: {:?}",
         result.err()
+    );
+}
+
+#[test]
+fn rejects_non_bool_while_condition() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            while 123 {
+                ret;
+            }
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_err(),
+        "expected while condition type error"
     );
 }
