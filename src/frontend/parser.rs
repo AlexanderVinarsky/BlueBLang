@@ -172,18 +172,21 @@ impl Parser {
             return Ok(params);
         }
 
-        params.push(Param {
-            name: self.expect_identifier()?,
-        });
+        params.push(self.parse_param()?);
 
         while self.check_kind(TokenKind::Comma) {
             self.advance();
-            params.push(Param {
-                name: self.expect_identifier()?,
-            });
+            params.push(self.parse_param()?);
         }
 
         return Ok(params);
+    }
+
+    fn parse_param(&mut self) -> Result<Param, ParseError> {
+        let name = self.expect_identifier()?;
+        self.expect_kind(TokenKind::Colon)?;
+        let type_annotation = self.parse_type_annotation()?;
+        return Ok(Param {name, type_annotation})
     }
 
     fn parse_args(&mut self) -> Result<Vec<Expr>, ParseError> {

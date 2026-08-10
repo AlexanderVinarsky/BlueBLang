@@ -7,7 +7,7 @@ pub struct SemanticError {
 }
 
 pub struct FunctionInfo {
-    param_count: usize,
+    param_types: Vec<Type>,
     return_type: Type,
 }
 
@@ -76,7 +76,8 @@ impl SemanticAnalyzer {
         let previous_return_type = self.current_return_type.replace(return_type);
         self.scopes.push(HashMap::new());
         for param in &function.params {
-            self.declare_variable(param.name.as_str(), Type::Int)?;                 // !!!
+            let ty = self.type_annotation_to_type(&param.type_annotation);
+            self.declare_variable(param.name.as_str(), ty)?;
         }
         self.analyze_block(&function.body)?;
         self.scopes.pop();
@@ -248,11 +249,11 @@ impl SemanticAnalyzer {
                 });
             }
         };
-        if info.param_count != actual_arg_count {
+        if info.param_types.len() != actual_arg_count {
             return Err(SemanticError {
                 message: format!(
                     "Wrong number of arguments for function `{}`. Expected {}, got {}",
-                    name, info.param_count, actual_arg_count
+                    name, info.param_types.len(), actual_arg_count
                 ),
             });
         }
@@ -265,9 +266,13 @@ impl SemanticAnalyzer {
                 message: format!("Duplicate function name: {}", function.name),
             });
         }
+        let mut param_types = Vec::new();
+        for param in &function.params {
+            param_types.push(self.type_annotation_to_type(&param.type_annotation));
+        }
         let info = FunctionInfo {
-            param_count: function.params.len(),
-            return_type: Type::Unit,
+            param_types,
+            return_type: self.type_annotation_to_type(&function.return_type),
         };
         self.functions.insert(function.name.clone(), info);
         Ok(())
@@ -304,11 +309,11 @@ impl SemanticAnalyzer {
                 message: "Main function was not found".into(),
             }),
             Some(info) => {
-                if info.param_count != 0 {
+                if info.param_types.len() != 0 {
                     return Err(SemanticError {
                         message: format!(
                             "Main function must have 0 parameters, got {}",
-                            info.param_count
+                            info.param_types.len()
                         ),
                     });
                 }

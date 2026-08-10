@@ -11,9 +11,11 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="type annotation testing + fix">
+    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="tests refactoring">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/semantic_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/semantic_tests.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/ast.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/ast.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/semantic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/semantic.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,61 +38,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.001586467184976" />
-      <entry key="MS500" value="1.3347113625666984" />
-      <entry key="S2" value="2.9527394688276978" />
-      <entry key="S5" value="4.332104286817639" />
-      <entry key="S10" value="5.060473971215823" />
-      <entry key="S30" value="5.659363592314917" />
-      <entry key="S60" value="5.825997698310475" />
-      <entry key="M2" value="5.935522615721896" />
-      <entry key="M5" value="7.215471964217752" />
-      <entry key="M10" value="12.027820208687684" />
-      <entry key="M15" value="17.57125979739472" />
-      <entry key="M30" value="30.640216449391072" />
-      <entry key="H1" value="44.11963522582874" />
-      <entry key="H2" value="56.91926684735549" />
-      <entry key="H4" value="73.63228874503233" />
-      <entry key="D1" value="386.46514378506987" />
-      <entry key="W1" value="1337.7300043779694" />
+      <entry key="MS100" value="1.000019719739237" />
+      <entry key="MS500" value="1.114546080584419" />
+      <entry key="S2" value="1.5817616090488626" />
+      <entry key="S5" value="1.8051913769646653" />
+      <entry key="S10" value="1.8988610274917543" />
+      <entry key="S30" value="2.431473479933609" />
+      <entry key="S60" value="5.33649117672733" />
+      <entry key="M2" value="12.064566784073854" />
+      <entry key="M5" value="23.891878223919253" />
+      <entry key="M10" value="33.376631896202966" />
+      <entry key="M15" value="40.187418318665465" />
+      <entry key="M30" value="57.23857672939549" />
+      <entry key="H1" value="80.04734873131821" />
+      <entry key="H2" value="103.33271477333138" />
+      <entry key="H4" value="127.70528461494496" />
+      <entry key="D1" value="444.09212862672246" />
+      <entry key="W1" value="1400.7573938570806" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="0.0" />
-      <entry key="S10" value="0.0" />
-      <entry key="S30" value="0.0" />
-      <entry key="S60" value="9.06856865866709E-175" />
-      <entry key="M2" value="1.5374068586901181E-87" />
-      <entry key="M5" value="5.158887089147148E-35" />
-      <entry key="M10" value="1.8431507757943613E-17" />
-      <entry key="M15" value="1.3251488939856524E-11" />
-      <entry key="M30" value="9.59518339699089E-6" />
-      <entry key="H1" value="0.00818772836012925" />
-      <entry key="H2" value="0.2400855322612819" />
-      <entry key="H4" value="1.363225348653955" />
-      <entry key="D1" value="19.03794980554597" />
-      <entry key="W1" value="64.88732563527611" />
+      <entry key="MS500" value="1.4129766097103526E-101" />
+      <entry key="S2" value="6.131034262864157E-26" />
+      <entry key="S5" value="8.222682045011937E-11" />
+      <entry key="S10" value="9.067929432326685E-6" />
+      <entry key="S30" value="0.021159820871768764" />
+      <entry key="S60" value="0.16192678635374683" />
+      <entry key="M2" value="0.516894531391679" />
+      <entry key="M5" value="1.4059138103404958" />
+      <entry key="M10" value="2.858445286061341" />
+      <entry key="M15" value="4.241142495332664" />
+      <entry key="M30" value="7.286632065369552" />
+      <entry key="H1" value="10.217874362651944" />
+      <entry key="H2" value="12.482979570959492" />
+      <entry key="H4" value="14.736386438844969" />
+      <entry key="D1" value="33.30473017852457" />
+      <entry key="W1" value="79.61401536687771" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9674476578479376" />
-      <entry key="MS500" value="1.324579808126902" />
-      <entry key="S2" value="2.9464228966768586" />
-      <entry key="S5" value="4.3283268013273" />
-      <entry key="S10" value="5.058258666166991" />
-      <entry key="S30" value="5.6585361047979585" />
-      <entry key="S60" value="5.8255715902272645" />
-      <entry key="M2" value="5.935303723789079" />
-      <entry key="M5" value="7.215293429965529" />
-      <entry key="M10" value="12.027212784826931" />
-      <entry key="M15" value="17.570201509045067" />
-      <entry key="M30" value="30.63869422971343" />
-      <entry key="H1" value="44.126440454889135" />
-      <entry key="H2" value="57.158241224241955" />
-      <entry key="H4" value="74.9944983636733" />
-      <entry key="D1" value="405.50147390427776" />
-      <entry key="W1" value="1402.6164753915414" />
+      <entry key="MS100" value="0.0011063676068805853" />
+      <entry key="MS500" value="0.2887137188790147" />
+      <entry key="S2" value="1.1357856814702498" />
+      <entry key="S5" value="1.582387407999854" />
+      <entry key="S10" value="1.7780606769491312" />
+      <entry key="S30" value="2.404522748016269" />
+      <entry key="S60" value="5.460706257749167" />
+      <entry key="M2" value="12.547430143805872" />
+      <entry key="M5" value="25.272502054927603" />
+      <entry key="M10" value="36.21571765133556" />
+      <entry key="M15" value="44.41170859622315" />
+      <entry key="M30" value="64.51233870425281" />
+      <entry key="H1" value="90.25640415680685" />
+      <entry key="H2" value="115.81019276025758" />
+      <entry key="H4" value="142.43826492212528" />
+      <entry key="D1" value="477.3948277117373" />
+      <entry key="W1" value="1480.3704923251091" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -202,7 +204,8 @@
       <workItem from="1785761881916" duration="6371000" />
       <workItem from="1785868359890" duration="31774000" />
       <workItem from="1786088757659" duration="1657000" />
-      <workItem from="1786135151639" duration="875000" />
+      <workItem from="1786135151639" duration="1521000" />
+      <workItem from="1786385379134" duration="7423000" />
     </task>
     <task id="LOCAL-00001" summary="postifx assignment parsing">
       <option name="closed" value="true" />
@@ -364,7 +367,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786045921966</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="tests refactoring">
+      <option name="closed" value="true" />
+      <created>1786136246279</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1786136246279</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -391,7 +402,8 @@
     <MESSAGE value="type annotation update" />
     <MESSAGE value="type annotation check" />
     <MESSAGE value="type annotation testing + fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="type annotation testing + fix" />
+    <MESSAGE value="tests refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="tests refactoring" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
