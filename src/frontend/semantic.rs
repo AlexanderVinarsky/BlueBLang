@@ -6,6 +6,7 @@ pub struct SemanticError {
     pub message: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FunctionInfo {
     param_types: Vec<Type>,
     return_type: Type,
@@ -166,7 +167,7 @@ impl SemanticAnalyzer {
         match expr {
             Expr::Call { callee, args } => {
                 let name = self.check_call_target(callee.as_ref())?;
-                self.check_function_call(name, args.len())?;
+                self.check_function_call(name, args)?;
                 for arg in args {
                     self.analyze_expr(arg)?;
                 }
@@ -240,8 +241,8 @@ impl SemanticAnalyzer {
         }
     }
 
-    fn check_function_call(&self, name: &str, actual_arg_count: usize) -> Result<Type, SemanticError> {
-        let info = match self.functions.get(name) {
+    fn check_function_call(&mut self, name: &str, args: &[Expr]) -> Result<Type, SemanticError> {
+        let info = match self.functions.get(name).cloned() {
             Some(info) => info,
             None => {
                 return Err(SemanticError {
@@ -249,13 +250,25 @@ impl SemanticAnalyzer {
                 });
             }
         };
-        if info.param_types.len() != actual_arg_count {
+        if info.param_types.len() != args.len() {
             return Err(SemanticError {
                 message: format!(
                     "Wrong number of arguments for function `{}`. Expected {}, got {}",
-                    name, info.param_types.len(), actual_arg_count
+                    name, info.param_types.len(), args.len()
                 ),
             });
+        }
+        for (index, (arg, expected_type)) in args.iter().zip(info.param_types.iter()).enumerate() {
+            let actual_type = self.analyze_expr(arg)?;
+
+            if &actual_type != expected_type {
+                return Err(SemanticError {
+                    message: format!(
+                        "Wrong type for argument {} in function `{}`! Expected {:?}, got {:?}",
+                        index + 1, name, expected_type, actual_type
+                    ),
+                });
+            }
         }
         Ok(info.return_type.clone())
     }

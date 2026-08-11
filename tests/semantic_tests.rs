@@ -417,3 +417,48 @@ fn rejects_non_bool_while_condition() {
         "expected while condition type error"
     );
 }
+
+#[test]
+fn accepts_function_call_with_correct_argument_types() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            takes_int(1);
+        }
+
+        fn takes_int(x: int) {
+            ret;
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_ok(),
+        "expected semantic success, got: {:?}",
+        result.err()
+    );
+}
+
+#[test]
+fn rejects_function_call_with_wrong_argument_type() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            takes_int(true);
+        }
+
+        fn takes_int(x: int) {
+            ret;
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_err(),
+        "expected function argument type mismatch error"
+    );
+}
