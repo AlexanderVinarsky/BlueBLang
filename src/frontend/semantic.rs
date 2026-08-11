@@ -167,11 +167,7 @@ impl SemanticAnalyzer {
         match expr {
             Expr::Call { callee, args } => {
                 let name = self.check_call_target(callee.as_ref())?;
-                self.check_function_call(name, args)?;
-                for arg in args {
-                    self.analyze_expr(arg)?;
-                }
-                Ok(Type::Unit)
+                self.check_function_call(name, args)
             }
 
             Expr::Binary { left, op, right} => {
@@ -322,7 +318,7 @@ impl SemanticAnalyzer {
                 message: "Main function was not found".into(),
             }),
             Some(info) => {
-                if info.param_types.len() != 0 {
+                if info.param_types.is_empty() {
                     return Err(SemanticError {
                         message: format!(
                             "Main function must have 0 parameters, got {}",
