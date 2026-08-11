@@ -42,7 +42,7 @@ fn rejects_duplicate_top_level_function_names() {
 #[test]
 fn accepts_distinct_function_params() {
     let src = r#"
-        fn pow(base, exp) {}
+        fn pow(base: int, exp: int) {}
         fn main() {}
     "#;
     let program = parse_program(src).unwrap();
@@ -57,7 +57,7 @@ fn accepts_distinct_function_params() {
 #[test]
 fn rejects_duplicate_function_params() {
     let src = r#"
-        fn pow(x, x) {}
+        fn pow(x: int, x: int) {}
     "#;
     let program = parse_program(src).unwrap();
     let result = analyze_program(&program);
@@ -81,7 +81,7 @@ fn rejects_unknown_function_call() {
 #[test]
 fn rejects_wrong_function_argument_count() {
     let src = r#"
-        fn pow(base, exp) {}
+        fn pow(base: int, exp: int) {}
 
         fn main() {
             pow(2);
@@ -123,7 +123,7 @@ fn rejects_missing_main_function() {
 #[test]
 fn rejects_main_with_parameters() {
     let src = r#"
-        fn main(x) {}
+        fn main(x: int) {}
     "#;
 
     let program = parse_program(src).unwrap();
@@ -159,7 +159,7 @@ fn accepts_function_parameter_as_local_variable() {
         r#"
         fn main() {}
 
-        fn foo(x) {
+        fn foo(x: int) {
             x;
         }
         "#,
