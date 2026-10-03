@@ -59,14 +59,6 @@ impl Parser {
         &self.tokens[self.pos].kind
     }
 
-    fn next_kind(&self) -> &TokenKind {
-        if self.pos + 1 < self.tokens.len() {
-            return &self.tokens[self.pos + 1].kind;
-        } else {
-            panic!("expected token, got out of bounds");
-        }
-    }
-
     fn check_next_kind(&self, kind: TokenKind) -> bool {
         return self.pos + 1 < self.tokens.len() && self.tokens[self.pos + 1].kind == kind;
     }
