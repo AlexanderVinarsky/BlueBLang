@@ -1,0 +1,124 @@
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Program {
+    pub items: Vec<Item>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Item {
+    Function(Function),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Function {
+    pub name: String,
+    pub params: Vec<Param>,
+    pub return_type: TypeAnnotation,
+    pub body: Block,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Param {
+    pub name: String,
+    pub type_annotation: TypeAnnotation,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Block {
+    pub stmts: Vec<Stmt>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Stmt {
+    Let {
+        name: String,
+        value: Expr,
+    },
+
+    ExprStmt(Expr),
+    Block(Block),
+
+    If {
+        condition: Expr,
+        then_branch: Box<Stmt>,
+        else_branch: Option<Box<Stmt>>,
+    },
+
+    While {
+        condition: Expr,
+        body: Box<Stmt>,
+    },
+
+    Assign {
+        target: Expr,
+        value: Expr,
+    },
+
+    Return(Option<Expr>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Expr {
+    Number(String),
+    Identifier(String),
+    String(String),
+    Bool(bool),
+
+    Binary {
+        left: Box<Expr>,
+        op: BinaryOp,
+        right: Box<Expr>,
+    },
+
+    Unary {
+        op: UnaryOp,
+        expr: Box<Expr>,
+    },
+
+    Index {
+        object: Box<Expr>,
+        index: Box<Expr>,
+    },
+
+    Call {
+        callee: Box<Expr>,
+        args: Vec<Expr>,
+    },
+
+    Member {
+        object: Box<Expr>,
+        field: String,
+    },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum BinaryOp {
+    Plus,
+    Minus,
+    Star,
+    Slash,
+
+    EqualEqual,
+    BangEqual,
+
+    Greater,
+    GreaterEqual,
+    Less,
+    LessEqual,
+
+    And,
+    Or,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum UnaryOp {
+    Minus,
+    Bang,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum TypeAnnotation {
+    Int,
+    Bool,
+    String,
+    Unit
+}

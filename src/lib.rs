@@ -1,4 +1,5 @@
 pub mod frontend;
+pub mod hir;
 
 use crate::frontend::ast::Program;
 use crate::frontend::lexer::Lexer;

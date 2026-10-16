@@ -1,0 +1,140 @@
+use crate::frontend::ast;
+use crate::hir::hir;
+
+pub struct HirLowerer {}
+
+impl HirLowerer {
+    pub fn lower_program(&mut self, program: &ast::Program) -> hir::Program {
+        hir::Program {
+            items: program.items.iter().map(|item| self.lower_item(item)).collect()
+        }
+    }
+
+    pub fn lower_item(&mut self, item: &ast::Item) -> hir::Item {
+        match item {
+            ast::Item::Function(function) => hir::Item::Function(self.lower_function(function))
+        }
+    }
+
+    pub fn lower_function(&mut self, function: &ast::Function) -> hir::Function {
+        hir::Function {
+            name: function.name.clone(),
+            params: function.params.iter().map(|param| self.lower_param(param)).collect(),
+            return_type: self.lower_type_annotation(&function.return_type),
+            body: self.lower_block(&function.body)
+        }
+    }
+
+    pub fn lower_param(&mut self, param: &ast::Param) -> hir::Param {
+        hir::Param {
+            name: param.name.clone(),
+            type_annotation: self.lower_type_annotation(&param.type_annotation)
+        }
+    }
+
+    pub fn lower_block(&mut self, block: &ast::Block) -> hir::Block {
+        hir::Block {
+            stmts: block.stmts.iter().map(|stmt| self.lower_stmt(stmt)).collect()
+        }
+    }
+
+    pub fn lower_stmt(&mut self, stmt: &ast::Stmt) -> hir::Stmt {
+        match stmt {
+            ast::Stmt::Let { name, value } => hir::Stmt::Let {
+                name: name.clone(),
+                value: self.lower_expr(value)
+            },
+
+            ast::Stmt::ExprStmt(expr) => hir::Stmt::ExprStmt(self.lower_expr(expr)),
+            ast::Stmt::Block(block) => hir::Stmt::Block(self.lower_block(block)),
+
+            ast::Stmt::If { condition, then_branch, else_branch } => hir::Stmt::If {
+                condition: self.lower_expr(condition),
+                then_branch: Box::new(self.lower_stmt(then_branch)),
+                else_branch: else_branch.as_deref().map(|branch| Box::new(self.lower_stmt(branch)))
+            },
+
+            ast::Stmt::While { condition, body } => hir::Stmt::While {
+                condition: self.lower_expr(condition),
+                body: Box::new(self.lower_stmt(body))
+            },
+
+            ast::Stmt::Assign { target, value } => hir::Stmt::Assign {
+                target: self.lower_expr(target),
+                value:  self.lower_expr(value)
+            },
+
+            ast::Stmt::Return(expr) => {
+                hir::Stmt::Return(expr.as_ref().map(|expr| self.lower_expr(expr)))
+            }
+        }
+    }
+
+    pub fn lower_expr(&mut self, expr: &ast::Expr) -> hir::Expr {
+        match expr {
+            ast::Expr::Number(number) => hir::Expr::Number(number.clone()),
+            ast::Expr::Identifier(name) => hir::Expr::Identifier(name.clone()),
+            ast::Expr::String(value) => hir::Expr::String(value.clone()),
+            ast::Expr::Bool(value) => hir::Expr::Bool(*value),
+
+            ast::Expr::Binary { left, op, right } => hir::Expr::Binary {
+                left: Box::new(self.lower_expr(left)),
+                op: self.lower_binary_op(op),
+                right: Box::new(self.lower_expr(right))
+            },
+
+            ast::Expr::Unary { op, expr } => hir::Expr::Unary {
+                op: self.lower_unary_op(op),
+                expr: Box::new(self.lower_expr(expr))
+            },
+
+            ast::Expr::Index { object, index } => hir::Expr::Index {
+                object: Box::new(self.lower_expr(object)),
+                index: Box::new(self.lower_expr(index))
+            },
+
+            ast::Expr::Call { callee, args } => hir::Expr::Call {
+                callee: Box::new(self.lower_expr(callee)),
+                args: args.iter().map(|arg| self.lower_expr(arg)).collect()
+            },
+
+            ast::Expr::Member { object, field } => hir::Expr::Member {
+                object: Box::new(self.lower_expr(object)),
+                field: field.clone()
+            }
+        }
+    }
+
+    pub fn lower_binary_op(&mut self, op: &ast::BinaryOp) -> hir::BinaryOp {
+        match op {
+            ast::BinaryOp::Plus => hir::BinaryOp::Plus,
+            ast::BinaryOp::Minus => hir::BinaryOp::Minus,
+            ast::BinaryOp::Star => hir::BinaryOp::Star,
+            ast::BinaryOp::Slash => hir::BinaryOp::Slash,
+            ast::BinaryOp::EqualEqual => hir::BinaryOp::EqualEqual,
+            ast::BinaryOp::BangEqual => hir::BinaryOp::BangEqual,
+            ast::BinaryOp::Greater => hir::BinaryOp::Greater,
+            ast::BinaryOp::GreaterEqual => hir::BinaryOp::GreaterEqual,
+            ast::BinaryOp::Less => hir::BinaryOp::Less,
+            ast::BinaryOp::LessEqual => hir::BinaryOp::LessEqual,
+            ast::BinaryOp::And => hir::BinaryOp::And,
+            ast::BinaryOp::Or => hir::BinaryOp::Or
+        }
+    }
+
+    pub fn lower_unary_op(&mut self, op: &ast::UnaryOp) -> hir::UnaryOp {
+        match op {
+            ast::UnaryOp::Minus => hir::UnaryOp::Minus,
+            ast::UnaryOp::Bang => hir::UnaryOp::Bang
+        }
+    }
+
+    pub fn lower_type_annotation(&mut self, annotation: &ast::TypeAnnotation) -> hir::TypeAnnotation {
+        match annotation {
+            ast::TypeAnnotation::Int => hir::TypeAnnotation::Int,
+            ast::TypeAnnotation::Bool => hir::TypeAnnotation::Bool,
+            ast::TypeAnnotation::String => hir::TypeAnnotation::String,
+            ast::TypeAnnotation::Unit => hir::TypeAnnotation::Unit
+        }
+    }
+}

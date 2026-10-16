@@ -1,26 +1,23 @@
 use blueblang::parse_program;
+use blueblang::hir::hir_lowerer::HirLowerer;
 
 fn main() {
     println!("Welcome to BlueBLang!");
 
     let cases = [
         "fn main() { arr[i] = x; }",
-        "fn main() { arr[i + 1] = foo.bar; }",
-        "fn main() { foo.bar = x; }",
-        "fn main() { foo.bar[i] = y; }",
-        "fn main() { foo.bar()[i] = z; }",
-        "fn main() { arr[] = x; }",
-        "fn main() { foo. = x; }",
-        "fn main() { foo.bar = ; }",
-        "fn main() { arr[i = x; }",
     ];
+    let mut lowerer = HirLowerer {};
 
     for (i, input) in cases.iter().enumerate() {
-        println!("case {}:", i + 1);
         println!("{}", input);
 
         match parse_program(input) {
-            Ok(ast) => println!("{:#?}", ast),
+            Ok(ast) => {
+                let hir = lowerer.lower_program(&ast);
+                println!("AST:\n{:#?}", ast);
+                println!("HIR:\n{:#?}", hir);
+            }
             Err(err) => println!("error: {:#?}", err),
         }
 
