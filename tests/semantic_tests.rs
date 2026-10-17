@@ -462,3 +462,122 @@ fn rejects_function_call_with_wrong_argument_type() {
         "expected function argument type mismatch error"
     );
 }
+
+
+#[test]
+fn accepts_valid_for_stmt() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            for (let i = 0, i < 10, i = i + 1) {
+                let x = i * 2;
+            }
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_ok(),
+        "expected semantic success, got: {:?}",
+        result.err()
+    );
+}
+
+#[test]
+fn accepts_for_with_omitted_parts() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            for (,,) {
+                ret;
+            }
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_ok(),
+        "expected semantic success, got: {:?}",
+        result.err()
+    );
+}
+
+#[test]
+fn rejects_non_bool_for_condition() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            for (let i = 0, 123, i = i + 1) {}
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_err(),
+        "expected for condition type error"
+    );
+}
+
+#[test]
+fn rejects_for_step_type_mismatch() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            for (let i = 0, i < 10, i = true) {}
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_err(),
+        "expected for step assignment type mismatch"
+    );
+}
+
+#[test]
+fn rejects_for_variable_outside_scope() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            for (let i = 0, i < 10, i = i + 1) {
+                let x = i;
+            }
+
+            i;
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_err(),
+        "expected for variable to be out of scope"
+    );
+}
+
+#[test]
+fn rejects_undeclared_variable_in_for_step() {
+    let program = parse_program(
+        r#"
+        fn main() {
+            for (let i = 0, i < 10, x = x + 1) {}
+        }
+        "#,
+    ).unwrap();
+
+    let result = analyze_program(&program);
+
+    assert!(
+        result.is_err(),
+        "expected undeclared variable error in for step"
+    );
+}

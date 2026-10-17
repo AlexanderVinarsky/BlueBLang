@@ -141,3 +141,30 @@ fn rejects_assignment_target_case_group() {
 
     assert_err_group("assignment target error cases", &cases);
 }
+
+
+#[test]
+fn parses_for_stmt_case_group() {
+    let cases = [
+        "fn main() { for (let i = 0, i < 10, i = i + 1) {} }",
+        "fn main() { for (, i < 10, i = i + 1) {} }",
+        "fn main() { for (let i = 0, i < 10,) {} }",
+        "fn main() { for (let i = 0,, i = i + 1) {} }",
+        "fn main() { for (,,) { ret; } }",
+        "fn main() { for (let i = 0, i < 10, i = i + 1) { let x = i; } }",
+    ];
+
+    assert_ok_group("for statement cases", &cases);
+}
+
+#[test]
+fn rejects_for_stmt_case_group() {
+    let cases = [
+        "fn main() { for (let i = 0 i < 10, i = i + 1) {} }",
+        "fn main() { for (let i = 0, i < 10 i = i + 1) {} }",
+        "fn main() { for (let i = 0, i < 10,) }",
+        "fn main() { for (let i = 0, i < 10, i = ) {} }",
+    ];
+
+    assert_err_group("for statement error cases", &cases);
+}

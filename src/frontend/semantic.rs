@@ -350,7 +350,7 @@ impl SemanticAnalyzer {
                 message: "Main function was not found".into(),
             }),
             Some(info) => {
-                if info.param_types.is_empty() {
+                if !info.param_types.is_empty() {
                     return Err(SemanticError {
                         message: format!(
                             "Main function must have 0 parameters, got {}",
