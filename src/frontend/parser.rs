@@ -205,30 +205,33 @@ impl Parser {
     }
 
     fn parse_stmt(&mut self) -> Result<Stmt, ParseError> {
-        match self.peek_kind() {
-            TokenKind::Let => return self.parse_let_stmt(),
+        let stmt = match self.peek_kind() {
+            TokenKind::Let => self.parse_let_stmt()?,
             TokenKind::If => return self.parse_if_stmt(),
             TokenKind::For => return self.parse_for_stmt(),
             TokenKind::While => return self.parse_while_stmt(),
-            TokenKind::Ret => return self.parse_return_stmt(),
-            TokenKind::LBrace => return Ok(Stmt::Block(self.parse_block()?)),
-            _ => {}
-        }
+            TokenKind::Ret => self.parse_return_stmt()?,
+            TokenKind::LBrace => { return Ok(Stmt::Block(self.parse_block()?)) }
+            _ => {
+                let return_pos = self.pos;
 
-        let return_pos = self.pos;
+            let is_assign = match self.parse_postfix() {
+                Ok(target) => self.check_kind(TokenKind::Equal) && self.is_assignable_target(&target),
+                Err(_) => false,
+             };
 
-        let is_assign = match self.parse_postfix() {
-            Ok(target) => self.check_kind(TokenKind::Equal) && self.is_assignable_target(&target),
-            Err(_) => false,
+            self.pos = return_pos;
+
+                if is_assign {
+                    self.parse_assign()?
+                } else {
+                    self.parse_expr_stmt()?
+                }
+            }
         };
 
-        self.pos = return_pos;
-
-        if is_assign {
-            self.parse_assign()
-        } else {
-            self.parse_expr_stmt()
-        }
+        self.expect_kind(TokenKind::Semicolon)?;
+        Ok(stmt)
     }
 
     fn parse_let_stmt(&mut self) -> Result<Stmt, ParseError> {
@@ -238,8 +241,6 @@ impl Parser {
         self.expect_kind(TokenKind::Equal)?;
 
         let value = self.parse_expr()?;
-
-        self.expect_kind(TokenKind::Semicolon)?;
 
         return Ok(Stmt::Let { name, value });
     }
@@ -266,14 +267,15 @@ impl Parser {
 
     fn parse_for_stmt(&mut self) -> Result<Stmt, ParseError> {
         self.expect_kind(TokenKind::For)?;
+        self.expect_kind(TokenKind::LParen)?;
 
         // init
-        self.expect_kind(TokenKind::LParen)?;
-        let init: Option<Box<Stmt>> = if self.check_kind(TokenKind::Comma) {
-            self.expect_kind(TokenKind::Comma)?;
+        let init = if self.check_kind(TokenKind::Comma) {
             None
+        } else if self.check_kind(TokenKind::Let) {
+            Some(Box::new(self.parse_let_stmt()?))
         } else {
-            Some(Box::new(self.parse_stmt()?))
+            Some(Box::new(self.parse_assign()?))
         };
 
         self.expect_kind(TokenKind::Comma)?;
@@ -291,11 +293,8 @@ impl Parser {
         let step: Option<Box<Stmt>> = if self.check_kind(TokenKind::RParen) {
             None
         } else {
-            Some(Box::new(self.parse_stmt()?))
+            Some(Box::new(self.parse_assign()?))
         };
-
-
-        let step: Option<Box<Stmt>> = Some(Box::new(self.parse_stmt()?));
         self.expect_kind(TokenKind::RParen)?;
 
         let body= self.parse_block()?;
@@ -321,13 +320,10 @@ impl Parser {
         self.expect_kind(TokenKind::Ret)?;
 
         if self.check_kind(TokenKind::Semicolon) {
-            self.expect_kind(TokenKind::Semicolon)?;
             return Ok(Stmt::Return(None));
         }
 
         let value = self.parse_expr()?;
-        self.expect_kind(TokenKind::Semicolon)?;
-
         return Ok(Stmt::Return(Some(value)));
     }
 
@@ -341,14 +337,12 @@ impl Parser {
         }
         self.expect_kind(TokenKind::Equal)?;
         let value = self.parse_expr()?;
-        self.expect_kind(TokenKind::Semicolon)?;
 
         Ok(Stmt::Assign { target, value })
     }
 
     fn parse_expr_stmt(&mut self) -> Result<Stmt, ParseError> {
         let expr = self.parse_expr()?;
-        self.expect_kind(TokenKind::Semicolon)?;
         return Ok(Stmt::ExprStmt(expr));
     }
 
