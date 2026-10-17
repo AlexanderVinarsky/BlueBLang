@@ -59,14 +59,6 @@ impl Parser {
         &self.tokens[self.pos].kind
     }
 
-    fn check_next_kind(&self, kind: TokenKind) -> bool {
-        return self.pos + 1 < self.tokens.len() && self.tokens[self.pos + 1].kind == kind;
-    }
-
-    fn is_assign_stmt(&self) -> bool {
-        return self.check_kind(TokenKind::Identifier) && self.check_next_kind(TokenKind::Equal);
-    }
-
     fn is_assignable_target(&self, expr: &Expr) -> bool {
         match expr {
             Expr::Identifier(_) | Expr::Member { .. } | Expr::Index { .. } => true,
@@ -216,6 +208,7 @@ impl Parser {
         match self.peek_kind() {
             TokenKind::Let => return self.parse_let_stmt(),
             TokenKind::If => return self.parse_if_stmt(),
+            TokenKind::For => return self.parse_for_stmt(),
             TokenKind::While => return self.parse_while_stmt(),
             TokenKind::Ret => return self.parse_return_stmt(),
             TokenKind::LBrace => return Ok(Stmt::Block(self.parse_block()?)),
@@ -268,6 +261,50 @@ impl Parser {
             condition,
             then_branch,
             else_branch,
+        });
+    }
+
+    fn parse_for_stmt(&mut self) -> Result<Stmt, ParseError> {
+        self.expect_kind(TokenKind::For)?;
+
+        // init
+        self.expect_kind(TokenKind::LParen)?;
+        let init: Option<Box<Stmt>> = if self.check_kind(TokenKind::Comma) {
+            self.expect_kind(TokenKind::Comma)?;
+            None
+        } else {
+            Some(Box::new(self.parse_stmt()?))
+        };
+
+        self.expect_kind(TokenKind::Comma)?;
+
+        // cond
+        let condition: Option<Box<Expr>> = if self.check_kind(TokenKind::Comma) {
+            None
+        } else {
+            Some(Box::new(self.parse_expr()?))
+        };
+
+        self.expect_kind(TokenKind::Comma)?;
+
+        // step
+        let step: Option<Box<Stmt>> = if self.check_kind(TokenKind::RParen) {
+            None
+        } else {
+            Some(Box::new(self.parse_stmt()?))
+        };
+
+
+        let step: Option<Box<Stmt>> = Some(Box::new(self.parse_stmt()?));
+        self.expect_kind(TokenKind::RParen)?;
+
+        let body= self.parse_block()?;
+
+        return Ok(Stmt::For {
+            init,
+            condition,
+            step,
+            body
         });
     }
 

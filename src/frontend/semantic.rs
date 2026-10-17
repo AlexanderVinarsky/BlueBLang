@@ -154,6 +154,38 @@ impl SemanticAnalyzer {
                 Ok(())
             }
 
+
+            Stmt::For {
+                init,
+                condition,
+                step,
+                body
+            } => {
+                self.scopes.push(HashMap::new());
+
+                let result = (|| {
+                    if let Some(init) = init {
+                        self.analyze_stmt(init)?;
+                    }
+
+                    if let Some(condition) = condition {
+                        let condition_type = self.analyze_expr(condition)?;
+                        self.expect_type(&condition_type, &Type::Bool, "for condition")?;
+                    }
+
+                    if let Some(step) = step {
+                        self.analyze_stmt(step)?;
+                    }
+
+                    self.analyze_stmt(&Stmt::Block(body.clone()))?;
+                    Ok(())
+                })();
+
+                self.scopes.pop();
+                result
+            }
+
+
             Stmt::While { condition, body } => {
                 let condition_type = self.analyze_expr(condition)?;
                 self.expect_type(&condition_type, &Type::Bool, "while condition")?;

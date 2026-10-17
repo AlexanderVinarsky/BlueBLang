@@ -11,20 +11,23 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="add visitor">
-      <change afterPath="$PROJECT_DIR$/src/hir/hir.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hir/hir_lowerer.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hir/mod.rs" afterDir="false" />
+    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="ast -&gt; hir template">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/ast.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/ast.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/semantic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/semantic.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hir/hir.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hir/hir.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hir/hir_lowerer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hir/hir_lowerer.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/parser_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/parser_tests.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:test" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -40,61 +43,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.7747666246196636" />
-      <entry key="MS500" value="4.093962924461527" />
-      <entry key="S2" value="6.586398804912606" />
-      <entry key="S5" value="8.035709815789644" />
-      <entry key="S10" value="9.098925445901095" />
-      <entry key="S30" value="10.281888683672664" />
-      <entry key="S60" value="11.495814093544071" />
-      <entry key="M2" value="14.829279828003939" />
-      <entry key="M5" value="21.30131679711613" />
-      <entry key="M10" value="25.688431629673993" />
-      <entry key="M15" value="28.1511719230729" />
-      <entry key="M30" value="40.41114231699977" />
-      <entry key="H1" value="117.65208211477176" />
-      <entry key="H2" value="304.7867042241788" />
-      <entry key="H4" value="526.0175657541324" />
-      <entry key="D1" value="1046.3339634314336" />
-      <entry key="W1" value="2173.8300094552064" />
+      <entry key="MS100" value="9.022308795219386E-7" />
+      <entry key="MS500" value="0.061810682273808204" />
+      <entry key="S2" value="0.49861562567603473" />
+      <entry key="S5" value="0.7570182574188471" />
+      <entry key="S10" value="0.8700679613793668" />
+      <entry key="S30" value="0.9546651280165863" />
+      <entry key="S60" value="0.9770696638576839" />
+      <entry key="M2" value="0.9884762735700906" />
+      <entry key="M5" value="1.0574979225348182" />
+      <entry key="M10" value="2.7111072786848154" />
+      <entry key="M15" value="6.847330652724913" />
+      <entry key="M30" value="25.471389679137086" />
+      <entry key="H1" value="76.18516213888901" />
+      <entry key="H2" value="220.08084594982844" />
+      <entry key="H4" value="456.0930127730136" />
+      <entry key="D1" value="1095.4742748532803" />
+      <entry key="W1" value="2270.1453465950704" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="0.0" />
-      <entry key="S10" value="9.095123669136416E-224" />
-      <entry key="S30" value="4.497137878622869E-75" />
-      <entry key="S60" value="6.706070293876264E-38" />
-      <entry key="M2" value="2.5896162380136267E-19" />
-      <entry key="M5" value="3.7357507293059934E-8" />
-      <entry key="M10" value="2.466534816624226E-4" />
-      <entry key="M15" value="0.005795794939862906" />
-      <entry key="M30" value="0.16880691099691975" />
-      <entry key="H1" value="0.9855876733582127" />
-      <entry key="H2" value="2.4213913824445705" />
-      <entry key="H4" value="3.921121152533833" />
-      <entry key="D1" value="20.375921865296057" />
-      <entry key="W1" value="76.84906296135476" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.0000000046609734" />
+      <entry key="M5" value="1.001088932355467" />
+      <entry key="M10" value="1.0777437680269841" />
+      <entry key="M15" value="1.3403025413768273" />
+      <entry key="M30" value="2.5834120679680925" />
+      <entry key="H1" value="4.7215623526528825" />
+      <entry key="H2" value="7.4229938403066305" />
+      <entry key="H4" value="10.193213935667774" />
+      <entry key="D1" value="27.881510564360678" />
+      <entry key="W1" value="85.13525522644737" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.6149518284448103" />
-      <entry key="MS500" value="4.0087749656655065" />
-      <entry key="S2" value="6.54012970033455" />
-      <entry key="S5" value="7.963263235008385" />
-      <entry key="S10" value="9.030329102366226" />
-      <entry key="S30" value="10.244786472644282" />
-      <entry key="S60" value="11.467893288089611" />
-      <entry key="M2" value="14.803258951415394" />
-      <entry key="M5" value="21.282219569477984" />
-      <entry key="M10" value="25.676412831243614" />
-      <entry key="M15" value="28.147897307957084" />
-      <entry key="M30" value="40.57433937150641" />
-      <entry key="H1" value="118.6334170553368" />
-      <entry key="H2" value="307.2046870536175" />
-      <entry key="H4" value="529.9362892305974" />
-      <entry key="D1" value="1066.7084351055782" />
-      <entry key="W1" value="2250.6781727681123" />
+      <entry key="MS100" value="7.324343188051386E-5" />
+      <entry key="MS500" value="0.19232216778655814" />
+      <entry key="S2" value="1.0777432658982156" />
+      <entry key="S5" value="1.5573909645333512" />
+      <entry key="S10" value="1.764039802883017" />
+      <entry key="S30" value="1.917831421438429" />
+      <entry key="S60" value="1.9584590709402807" />
+      <entry key="M2" value="1.979121959680682" />
+      <entry key="M5" value="2.0547719787288945" />
+      <entry key="M10" value="3.7855578605291416" />
+      <entry key="M15" value="8.182555410372967" />
+      <entry key="M30" value="28.045571596352797" />
+      <entry key="H1" value="80.89629730740708" />
+      <entry key="H2" value="227.49513831104193" />
+      <entry key="H4" value="466.2802109632911" />
+      <entry key="D1" value="1123.3535536250458" />
+      <entry key="W1" value="2355.2795821212794" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -109,6 +112,12 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Cargo.Run blueblang.executor": "Run",
+    "Cargo.Test accepts_for_with_omitted_parts.executor": "Run",
+    "Cargo.Test accepts_valid_for_stmt.executor": "Run",
+    "Cargo.Test rejects_for_step_type_mismatch.executor": "Run",
+    "Cargo.Test rejects_for_stmt_case_group.executor": "Run",
+    "Cargo.Test rejects_for_variable_outside_scope.executor": "Run",
+    "Cargo.Test rejects_non_bool_for_condition.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -126,6 +135,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
     "org.rust.first.attach.projects": "true",
     "settings.editor.selected.configurable": "preferences.sourceCode",
     "to.speed.mode.migration.done": "true",
@@ -141,10 +151,44 @@
       <recent name="$PROJECT_DIR$/frontend" />
     </key>
   </component>
-  <component name="RunManager" selected="Cargo.Run blueblang">
+  <component name="RunManager" selected="Cargo.Test rejects_for_variable_outside_scope">
     <configuration name="Run blueblang" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="buildProfileId" value="dev" />
       <option name="command" value="run --package blueblang --bin blueblang" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test accepts_for_with_omitted_parts" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package blueblang --test semantic_tests -- accepts_for_with_omitted_parts --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test accepts_valid_for_stmt" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package blueblang --test semantic_tests -- accepts_valid_for_stmt --exact" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <envs />
       <option name="emulateTerminal" value="true" />
@@ -177,6 +221,66 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test rejects_for_step_type_mismatch" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package blueblang --test semantic_tests -- rejects_for_step_type_mismatch --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test rejects_for_variable_outside_scope" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package blueblang --test semantic_tests -- rejects_for_variable_outside_scope --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test rejects_non_bool_for_condition" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package blueblang --test semantic_tests -- rejects_non_bool_for_condition --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cargo.Test rejects_for_variable_outside_scope" />
+        <item itemvalue="Cargo.Test rejects_for_step_type_mismatch" />
+        <item itemvalue="Cargo.Test rejects_non_bool_for_condition" />
+        <item itemvalue="Cargo.Test accepts_for_with_omitted_parts" />
+        <item itemvalue="Cargo.Test accepts_valid_for_stmt" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -217,7 +321,8 @@
       <workItem from="1791321769135" duration="223000" />
       <workItem from="1791406498339" duration="737000" />
       <workItem from="1792172027637" duration="3138000" />
-      <workItem from="1792181688626" duration="8953000" />
+      <workItem from="1792181688626" duration="11188000" />
+      <workItem from="1792252679731" duration="9054000" />
     </task>
     <task id="LOCAL-00001" summary="postifx assignment parsing">
       <option name="closed" value="true" />
@@ -419,14 +524,21 @@
       <option name="project" value="LOCAL" />
       <updated>1792184216959</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="ast -&gt; hir template">
+      <option name="closed" value="true" />
+      <created>1792194151759</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1792194151759</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="postifx assignment parsing" />
     <MESSAGE value="Formatting.." />
     <MESSAGE value="function semantic check" />
     <MESSAGE value="duplicate function params testing" />
@@ -451,7 +563,8 @@
     <MESSAGE value="Initial frontend milestone" />
     <MESSAGE value="Redundant func fix" />
     <MESSAGE value="add visitor" />
-    <option name="LAST_COMMIT_MESSAGE" value="add visitor" />
+    <MESSAGE value="ast -&gt; hir template" />
+    <option name="LAST_COMMIT_MESSAGE" value="ast -&gt; hir template" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

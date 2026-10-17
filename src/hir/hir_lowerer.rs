@@ -54,6 +54,13 @@ impl HirLowerer {
                 else_branch: else_branch.as_deref().map(|branch| Box::new(self.lower_stmt(branch)))
             },
 
+            ast::Stmt::For { init, condition, step, body } => hir::Stmt::For {
+                init: init.as_deref().map(|stmt| Box::new(self.lower_stmt(stmt))),
+                condition: condition.as_deref().map(|expr| Box::new(self.lower_expr(expr))),
+                step: step.as_deref().map(|stmt| Box::new(self.lower_stmt(stmt))),
+                body: self.lower_block(body)
+            },
+
             ast::Stmt::While { condition, body } => hir::Stmt::While {
                 condition: self.lower_expr(condition),
                 body: Box::new(self.lower_stmt(body))

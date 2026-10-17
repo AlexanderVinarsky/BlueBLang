@@ -43,6 +43,13 @@ pub enum Stmt {
         else_branch: Option<Box<Stmt>>,
     },
 
+    For {
+        init: Option<Box<Stmt>>,
+        condition: Option<Box<Expr>>,
+        step: Option<Box<Stmt>>,
+        body: Block
+    },
+
     While {
         condition: Expr,
         body: Box<Stmt>,
