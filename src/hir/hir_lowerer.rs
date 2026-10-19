@@ -1,3 +1,4 @@
+use std::ops::Deref;
 use crate::frontend::ast;
 use crate::hir::hir;
 
@@ -54,11 +55,37 @@ impl HirLowerer {
                 else_branch: else_branch.as_deref().map(|branch| Box::new(self.lower_stmt(branch)))
             },
 
-            ast::Stmt::For { init, condition, step, body } => hir::Stmt::For {
-                init: init.as_deref().map(|stmt| Box::new(self.lower_stmt(stmt))),
-                condition: condition.as_deref().map(|expr| Box::new(self.lower_expr(expr))),
-                step: step.as_deref().map(|stmt| Box::new(self.lower_stmt(stmt))),
-                body: self.lower_block(body)
+            ast::Stmt::For { init, condition, step, body } => {
+                let mut stmts: Vec<hir::Stmt> = Vec::new();
+
+                //init
+                if let Some(init) = init {
+                    stmts.push(self.lower_stmt(init));
+                }
+
+                // cond
+                let condition = match condition {
+                    Some(condition) => self.lower_expr(condition),
+                    None => hir::Expr::Bool(true),
+                };
+
+                // body
+                let mut while_stmts = vec![
+                    hir::Stmt::Block(self.lower_block(body))
+                ];
+
+                // step
+                if let Some(step) = step {
+                    while_stmts.push(self.lower_stmt(step));
+                }
+
+                // while
+                stmts.push(hir::Stmt::While {
+                    condition,
+                    body: Box::new(hir::Stmt::Block(hir::Block { stmts: while_stmts }))
+                });
+
+                return hir::Stmt::Block(hir::Block {stmts})
             },
 
             ast::Stmt::While { condition, body } => hir::Stmt::While {

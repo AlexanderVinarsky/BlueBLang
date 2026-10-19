@@ -11,13 +11,7 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="Add for to parser">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/semantic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/semantic.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/parser_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/parser_tests.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/semantic_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/semantic_tests.rs" afterDir="false" />
-    </list>
+    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="[HIR] Implement for loop lowering&quot;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,61 +33,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0579520988388804" />
-      <entry key="MS500" value="2.557067623622074" />
-      <entry key="S2" value="4.143619424313229" />
-      <entry key="S5" value="4.631053046113282" />
-      <entry key="S10" value="4.811097221531148" />
-      <entry key="S30" value="5.002494201516713" />
-      <entry key="S60" value="5.281786153955236" />
-      <entry key="M2" value="6.242402859975937" />
-      <entry key="M5" value="9.811528830542484" />
-      <entry key="M10" value="15.70813791896706" />
-      <entry key="M15" value="22.464145392105525" />
-      <entry key="M30" value="42.82917424424668" />
-      <entry key="H1" value="86.87848678097285" />
-      <entry key="H2" value="210.17157196699878" />
-      <entry key="H4" value="442.2478017806105" />
-      <entry key="D1" value="1136.6016647984402" />
-      <entry key="W1" value="2338.680265991816" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0000071769548466" />
+      <entry key="S2" value="1.0797700394166316" />
+      <entry key="S5" value="1.6968198219381212" />
+      <entry key="S10" value="3.0134019205707907" />
+      <entry key="S30" value="8.000280828519443" />
+      <entry key="S60" value="11.433709366897531" />
+      <entry key="M2" value="13.879661274455655" />
+      <entry key="M5" value="16.01178969419413" />
+      <entry key="M10" value="19.878499256835944" />
+      <entry key="M15" value="25.842786856289575" />
+      <entry key="M30" value="48.12397234096629" />
+      <entry key="H1" value="94.76087648117777" />
+      <entry key="H2" value="208.3237045030136" />
+      <entry key="H4" value="436.8634403600759" />
+      <entry key="D1" value="1185.4595816460358" />
+      <entry key="W1" value="2417.3798275145195" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="5.150912458693659E-211" />
-      <entry key="S2" value="2.6792652566740196E-53" />
-      <entry key="S5" value="9.595849501098845E-22" />
-      <entry key="S10" value="3.546683152448352E-11" />
-      <entry key="S30" value="4.8232031671384623E-4" />
-      <entry key="S60" value="0.030706650491166696" />
-      <entry key="M2" value="0.24709756092844157" />
-      <entry key="M5" value="0.8659300904093646" />
-      <entry key="M10" value="1.3229674247209118" />
-      <entry key="M15" value="1.5601841067950313" />
-      <entry key="M30" value="2.2249334283134314" />
-      <entry key="H1" value="3.91201010994186" />
-      <entry key="H2" value="6.818814808295376" />
-      <entry key="H4" value="10.236459276766352" />
-      <entry key="D1" value="28.921396698044276" />
-      <entry key="W1" value="86.71190838986746" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="2.667585362531937E-171" />
+      <entry key="S10" value="7.251747352038009E-86" />
+      <entry key="S30" value="6.840775863959449E-29" />
+      <entry key="S60" value="1.3018804302304809E-14" />
+      <entry key="M2" value="1.9081647598969244E-7" />
+      <entry key="M5" value="0.004071103704341292" />
+      <entry key="M10" value="0.1265315619568188" />
+      <entry key="M15" value="0.42548345020078665" />
+      <entry key="M30" value="1.6059335922058353" />
+      <entry key="H1" value="3.839224487347246" />
+      <entry key="H2" value="7.380912702240188" />
+      <entry key="H4" value="11.682249107846754" />
+      <entry key="D1" value="31.795941087384897" />
+      <entry key="W1" value="90.25122094320854" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.0138737852018194" />
-      <entry key="MS500" value="2.5317057141952244" />
-      <entry key="S2" value="4.1330527188765664" />
-      <entry key="S5" value="4.626311967388292" />
-      <entry key="S10" value="4.8086312539873175" />
-      <entry key="S30" value="5.002059194237881" />
-      <entry key="S60" value="5.311519353809611" />
-      <entry key="M2" value="6.487368906496222" />
-      <entry key="M5" value="10.674638595010384" />
-      <entry key="M10" value="17.02866852199327" />
-      <entry key="M15" value="24.02203037931636" />
-      <entry key="M30" value="45.0507997378587" />
-      <entry key="H1" value="90.78495347029614" />
-      <entry key="H2" value="216.9840627550162" />
-      <entry key="H4" value="452.47905736736874" />
-      <entry key="D1" value="1165.5208484891225" />
-      <entry key="W1" value="2425.3911514122155" />
+      <entry key="MS100" value="0.9460576467255959" />
+      <entry key="MS500" value="0.9889780434253426" />
+      <entry key="S2" value="1.0768319736281238" />
+      <entry key="S5" value="1.6950109045039639" />
+      <entry key="S10" value="3.0114499751096124" />
+      <entry key="S30" value="7.997901379115078" />
+      <entry key="S60" value="11.431890900636585" />
+      <entry key="M2" value="13.87852513176307" />
+      <entry key="M5" value="16.015193536741844" />
+      <entry key="M10" value="20.003535241001092" />
+      <entry key="M15" value="26.26568933295524" />
+      <entry key="M30" value="49.725693158755035" />
+      <entry key="H1" value="98.59458676774672" />
+      <entry key="H2" value="215.6983952838603" />
+      <entry key="H4" value="448.5402729856176" />
+      <entry key="D1" value="1217.2531573619456" />
+      <entry key="W1" value="2507.6299970747373" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -105,42 +99,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Cargo.Run blueblang.executor": "Run",
-    "Cargo.Test accepts_for_with_omitted_parts.executor": "Run",
-    "Cargo.Test accepts_valid_for_stmt.executor": "Run",
-    "Cargo.Test parses_for_stmt_case_group.executor": "Run",
-    "Cargo.Test rejects_assignment_target_case_group.executor": "Run",
-    "Cargo.Test rejects_for_step_type_mismatch.executor": "Run",
-    "Cargo.Test rejects_for_stmt_case_group.executor": "Run",
-    "Cargo.Test rejects_for_variable_outside_scope.executor": "Run",
-    "Cargo.Test rejects_non_bool_for_condition.executor": "Run",
-    "Cargo.Test rejects_undeclared_variable_in_for_step.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.rust.reset.selective.auto.import": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/home/alexandervinarsky/Projects/BlueBLang/src/hir",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
-    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
-    "org.rust.first.attach.projects": "true",
-    "settings.editor.selected.configurable": "preferences.sourceCode",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Cargo.Run blueblang.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test accepts_for_with_omitted_parts.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test accepts_valid_for_stmt.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test parses_for_stmt_case_group.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test rejects_assignment_target_case_group.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test rejects_for_step_type_mismatch.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test rejects_for_stmt_case_group.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test rejects_for_variable_outside_scope.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test rejects_non_bool_for_condition.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test rejects_undeclared_variable_in_for_step.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/alexandervinarsky/Projects/BlueBLang/src/hir&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
+    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
+    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/hir" />
@@ -321,7 +315,8 @@
       <workItem from="1791406498339" duration="737000" />
       <workItem from="1792172027637" duration="3138000" />
       <workItem from="1792181688626" duration="11188000" />
-      <workItem from="1792252679731" duration="13415000" />
+      <workItem from="1792252679731" duration="14140000" />
+      <workItem from="1792424882578" duration="4659000" />
     </task>
     <task id="LOCAL-00001" summary="postifx assignment parsing">
       <option name="closed" value="true" />
@@ -539,16 +534,37 @@
       <option name="project" value="LOCAL" />
       <updated>1792266833800</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Semicolon parsing refactoring">
+      <option name="closed" value="true" />
+      <created>1792270902878</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1792270902878</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Testing of for">
+      <option name="closed" value="true" />
+      <created>1792270936145</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1792270936145</updated>
+    </task>
+    <task id="LOCAL-00030" summary="[HIR] Implement for loop lowering&quot;">
+      <option name="closed" value="true" />
+      <created>1792429522978</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1792429522979</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="function semantic check" />
-    <MESSAGE value="duplicate function params testing" />
-    <MESSAGE value="semantic analysis update" />
     <MESSAGE value="semantic tests update" />
     <MESSAGE value="number of arguments testing" />
     <MESSAGE value="call semantic check and testing" />
@@ -571,7 +587,10 @@
     <MESSAGE value="add visitor" />
     <MESSAGE value="ast -&gt; hir template" />
     <MESSAGE value="Add for to parser" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add for to parser" />
+    <MESSAGE value="Semicolon parsing refactoring" />
+    <MESSAGE value="Testing of for" />
+    <MESSAGE value="[HIR] Implement for loop lowering&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="[HIR] Implement for loop lowering&quot;" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
