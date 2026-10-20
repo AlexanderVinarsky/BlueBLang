@@ -12,9 +12,7 @@ impl Parser {
     pub fn new(tokens: Vec<Token>) -> Self {
         Self { tokens, pos: 0 }
     }
-
-    // private
-
+    
     fn current(&self) -> &Token {
         &self.tokens[self.pos]
     }
@@ -258,11 +256,7 @@ impl Parser {
             None
         };
 
-        return Ok(Stmt::If {
-            condition,
-            then_branch,
-            else_branch,
-        });
+        return Ok(Stmt::If { condition, then_branch, else_branch });
     }
 
     fn parse_for_stmt(&mut self) -> Result<Stmt, ParseError> {
@@ -299,12 +293,7 @@ impl Parser {
 
         let body= self.parse_block()?;
 
-        return Ok(Stmt::For {
-            init,
-            condition,
-            step,
-            body
-        });
+        return Ok(Stmt::For { init, condition, step, body });
     }
 
     fn parse_while_stmt(&mut self) -> Result<Stmt, ParseError> {
@@ -338,7 +327,7 @@ impl Parser {
         self.expect_kind(TokenKind::Equal)?;
         let value = self.parse_expr()?;
 
-        Ok(Stmt::Assign { target, value })
+        return Ok(Stmt::Assign { target, value })
     }
 
     fn parse_expr_stmt(&mut self) -> Result<Stmt, ParseError> {
@@ -442,7 +431,7 @@ impl Parser {
             };
         }
 
-        Ok(left)
+        return Ok(left)
     }
 
     fn parse_additive(&mut self) -> Result<Expr, ParseError> {

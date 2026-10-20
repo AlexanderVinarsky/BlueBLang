@@ -317,6 +317,7 @@
       <workItem from="1792181688626" duration="11188000" />
       <workItem from="1792252679731" duration="14140000" />
       <workItem from="1792424882578" duration="4659000" />
+      <workItem from="1792525485509" duration="706000" />
     </task>
     <task id="LOCAL-00001" summary="postifx assignment parsing">
       <option name="closed" value="true" />
@@ -558,7 +559,15 @@
       <option name="project" value="LOCAL" />
       <updated>1792429522979</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="[HIR] Implement for loop lowering&quot;">
+      <option name="closed" value="true" />
+      <created>1792525518769</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1792525518769</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
