@@ -15,7 +15,7 @@ fn lowers_for_to_while() {
 
     let ast = parse_program(source).unwrap();
 
-    let mut lowerer = HirLowerer {};
+    let mut lowerer = HirLowerer::new();
     let hir = lowerer.lower_program(&ast);
 
     println!("AST:\n{:#?}", ast);

@@ -1,10 +1,21 @@
-use std::ops::Deref;
+use std::collections::HashMap;
 use crate::frontend::ast;
 use crate::hir::hir;
+use crate::hir::hir::SymbolId;
 
-pub struct HirLowerer {}
+pub struct HirLowerer {
+    scopes: Vec<HashMap<String, SymbolId>>,
+    next_symbol_id: u32
+}
 
 impl HirLowerer {
+    pub fn new() -> Self {
+        Self {
+            scopes: Vec::<HashMap<String, SymbolId>>::new(),
+            next_symbol_id: 0
+        }
+    }
+
     pub fn lower_program(&mut self, program: &ast::Program) -> hir::Program {
         hir::Program {
             items: program.items.iter().map(|item| self.lower_item(item)).collect()
@@ -34,9 +45,10 @@ impl HirLowerer {
     }
 
     pub fn lower_block(&mut self, block: &ast::Block) -> hir::Block {
-        hir::Block {
-            stmts: block.stmts.iter().map(|stmt| self.lower_stmt(stmt)).collect()
-        }
+        self.scopes.push(HashMap::new());
+        let stmts = block.stmts.iter().map(|stmt| self.lower_stmt(stmt)).collect();
+        self.scopes.pop();
+        return hir::Block { stmts }
     }
 
     pub fn lower_stmt(&mut self, stmt: &ast::Stmt) -> hir::Stmt {
@@ -56,6 +68,8 @@ impl HirLowerer {
             },
 
             ast::Stmt::For { init, condition, step, body } => {
+                self.scopes.push(HashMap::new());
+
                 let mut stmts: Vec<hir::Stmt> = Vec::new();
 
                 //init
@@ -85,6 +99,8 @@ impl HirLowerer {
                     body: Box::new(hir::Stmt::Block(hir::Block { stmts: while_stmts }))
                 });
 
+                self.scopes.pop();
+
                 return hir::Stmt::Block(hir::Block {stmts})
             },
 
@@ -107,7 +123,16 @@ impl HirLowerer {
     pub fn lower_expr(&mut self, expr: &ast::Expr) -> hir::Expr {
         match expr {
             ast::Expr::Number(number) => hir::Expr::Number(number.clone()),
-            ast::Expr::Identifier(name) => hir::Expr::Identifier(name.clone()),
+
+            ast::Expr::Identifier(name) => {
+                let symbol_id = self.resolve(name)
+                    .unwrap_or_else(|| panic!("Unresolved identifier: {name}"));
+                return hir::Expr::Identifier {
+                    name: name.clone(),
+                    symbol_id
+                }
+            },
+
             ast::Expr::String(value) => hir::Expr::String(value.clone()),
             ast::Expr::Bool(value) => hir::Expr::Bool(*value),
 
@@ -170,5 +195,21 @@ impl HirLowerer {
             ast::TypeAnnotation::String => hir::TypeAnnotation::String,
             ast::TypeAnnotation::Unit => hir::TypeAnnotation::Unit
         }
+    }
+
+    fn declare(&mut self, name: &str) -> hir::SymbolId {
+        let id = self.next_id();
+        self.scopes.last_mut().expect("!no active scope").insert(name.to_string(), id);
+        return id;
+    }
+
+    fn next_id(&mut self) -> hir::SymbolId {
+        let id = hir::SymbolId(self.next_symbol_id);
+        self.next_symbol_id += 1;
+        return id;
+    }
+
+    fn resolve(&self, name: &str) -> Option<hir::SymbolId> {
+        self.scopes.iter().rev().find_map(|scope| scope.get(name).copied())
     }
 }

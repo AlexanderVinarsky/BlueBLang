@@ -63,10 +63,18 @@ pub enum Stmt {
     Return(Option<Expr>),
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct SymbolId(pub u32);
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Expr {
     Number(String),
-    Identifier(String),
+
+    Identifier {
+        name: String,
+        symbol_id: SymbolId
+    },
+
     String(String),
     Bool(bool),
 

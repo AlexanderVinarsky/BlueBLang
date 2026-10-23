@@ -7,7 +7,7 @@ fn main() {
     let cases = [
         "fn main() { arr[i] = x; }",
     ];
-    let mut lowerer = HirLowerer {};
+    let mut lowerer = HirLowerer::new();
 
     for (i, input) in cases.iter().enumerate() {
         println!("{}", input);
