@@ -1,3 +1,18 @@
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct SymbolId(pub u32);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SymbolKind {
+    Function,
+    Variable
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Symbol {
+    pub name: String,
+    pub kind: SymbolKind
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Program {
     pub items: Vec<Item>,
@@ -11,6 +26,7 @@ pub enum Item {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Function {
     pub name: String,
+    pub symbol_id: SymbolId,
     pub params: Vec<Param>,
     pub return_type: TypeAnnotation,
     pub body: Block,
@@ -32,6 +48,7 @@ pub struct Block {
 pub enum Stmt {
     Let {
         name: String,
+        symbol_id: SymbolId,
         value: Expr,
     },
 
@@ -63,9 +80,6 @@ pub enum Stmt {
 
     Return(Option<Expr>),
 }
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct SymbolId(pub u32);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Expr {

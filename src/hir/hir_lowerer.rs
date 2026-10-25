@@ -1,10 +1,11 @@
-use std::collections::HashMap;
 use crate::frontend::ast;
 use crate::hir::hir;
-use crate::hir::hir::SymbolId;
+use crate::hir::hir::{SymbolId, SymbolKind};
+use std::collections::HashMap;
 
 pub struct HirLowerer {
     scopes: Vec<HashMap<String, SymbolId>>,
+    symbols: Vec<hir::Symbol>,
     next_symbol_id: u32
 }
 
@@ -12,14 +13,25 @@ impl HirLowerer {
     pub fn new() -> Self {
         Self {
             scopes: Vec::<HashMap<String, SymbolId>>::new(),
+            symbols: Vec::<hir::Symbol>::new(),
             next_symbol_id: 0
         }
     }
 
     pub fn lower_program(&mut self, program: &ast::Program) -> hir::Program {
-        hir::Program {
-            items: program.items.iter().map(|item| self.lower_item(item)).collect()
+        self.scopes.push(HashMap::new()); //global scope!
+
+        for item in &program.items {
+            match item {
+                ast::Item::Function(function) => {
+                    self.declare(&function.name, hir::SymbolKind::Function);
+                }
+            }
         }
+
+        let items = program.items.iter().map(|item| self.lower_item(item)).collect();
+        self.scopes.pop();
+        hir::Program { items }
     }
 
     pub fn lower_item(&mut self, item: &ast::Item) -> hir::Item {
@@ -29,6 +41,7 @@ impl HirLowerer {
     }
 
     pub fn lower_function(&mut self, function: &ast::Function) -> hir::Function {
+        let symbol_id = self.resolve(&function.name).expect("!function must be declared");
         self.scopes.push(HashMap::new());
 
         let name = function.name.clone();
@@ -38,11 +51,11 @@ impl HirLowerer {
 
         self.scopes.pop();
 
-        return hir::Function { name, params, return_type, body };
+        return hir::Function { name, params, symbol_id, return_type, body };
     }
 
     pub fn lower_param(&mut self, param: &ast::Param) -> hir::Param {
-        let symbol_id = self.declare(&param.name);
+        let symbol_id = self.declare(&param.name, SymbolKind::Variable);
 
         hir::Param {
             name: param.name.clone(),
@@ -60,10 +73,16 @@ impl HirLowerer {
 
     pub fn lower_stmt(&mut self, stmt: &ast::Stmt) -> hir::Stmt {
         match stmt {
-            ast::Stmt::Let { name, value } => hir::Stmt::Let {
-                name: name.clone(),
-                value: self.lower_expr(value)
-            },
+            ast::Stmt::Let { name, value } => {
+                let value = self.lower_expr(value);
+                let symbol_id = self.declare(name, hir::SymbolKind::Variable);
+
+                hir::Stmt::Let {
+                    name: name.clone(),
+                    symbol_id,
+                    value
+                }
+            }
 
             ast::Stmt::ExprStmt(expr) => hir::Stmt::ExprStmt(self.lower_expr(expr)),
             ast::Stmt::Block(block) => hir::Stmt::Block(self.lower_block(block)),
@@ -204,8 +223,12 @@ impl HirLowerer {
         }
     }
 
-    fn declare(&mut self, name: &str) -> hir::SymbolId {
+    fn declare(&mut self, name: &str, kind: hir::SymbolKind) -> hir::SymbolId {
         let id = self.next_id();
+        self.symbols.push(hir::Symbol {
+            name: name.to_string(),
+            kind
+        });
         self.scopes.last_mut().expect("!no active scope").insert(name.to_string(), id);
         return id;
     }
