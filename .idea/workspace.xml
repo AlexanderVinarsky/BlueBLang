@@ -11,12 +11,10 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="parser refactor">
+    <list default="true" id="3bc6f0bb-5780-4765-a37b-aadc4c4f5587" name="Changes" comment="[HIR] Add identifier resolution">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hir/hir.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hir/hir.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hir/hir_lowerer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hir/hir_lowerer.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/hir_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/hir_tests.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,60 +38,60 @@
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0000000000192757" />
-      <entry key="S5" value="1.0001463539416844" />
-      <entry key="S10" value="1.0324267796354218" />
-      <entry key="S30" value="2.404940313266701" />
-      <entry key="S60" value="4.991355383489788" />
-      <entry key="M2" value="8.472499985626056" />
-      <entry key="M5" value="13.209894536966623" />
-      <entry key="M10" value="16.31451688583457" />
-      <entry key="M15" value="17.95747954013236" />
-      <entry key="M30" value="22.28700240440408" />
-      <entry key="H1" value="41.40266188548047" />
-      <entry key="H2" value="116.41413939350427" />
-      <entry key="H4" value="315.3984858366265" />
-      <entry key="D1" value="1144.0816412788784" />
-      <entry key="W1" value="2438.0480496622035" />
+      <entry key="MS500" value="1.0000147853787809" />
+      <entry key="S2" value="1.1018873786698204" />
+      <entry key="S5" value="1.6067574758553356" />
+      <entry key="S10" value="2.101235578472214" />
+      <entry key="S30" value="2.6391363971471407" />
+      <entry key="S60" value="2.810635851182603" />
+      <entry key="M2" value="2.919477280945797" />
+      <entry key="M5" value="4.913949255131539" />
+      <entry key="M10" value="14.97657172170056" />
+      <entry key="M15" value="25.607326433415377" />
+      <entry key="M30" value="47.4803176889646" />
+      <entry key="H1" value="77.20357131567025" />
+      <entry key="H2" value="152.1139042719463" />
+      <entry key="H4" value="346.1838442135761" />
+      <entry key="D1" value="1189.9592935664875" />
+      <entry key="W1" value="2498.0047844627325" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="2.1082126365424667E-257" />
-      <entry key="S5" value="2.1358254878716094E-103" />
-      <entry key="S10" value="4.6214992025008615E-52" />
-      <entry key="S30" value="7.731450163808217E-18" />
-      <entry key="S60" value="2.7805485364956704E-9" />
-      <entry key="M2" value="5.2730906926737436E-5" />
-      <entry key="M5" value="0.01945168809423981" />
-      <entry key="M10" value="0.14193248169380243" />
-      <entry key="M15" value="0.28941224067762955" />
-      <entry key="M30" value="0.7754643412621904" />
-      <entry key="H1" value="2.198879546514943" />
-      <entry key="H2" value="5.635820169433411" />
-      <entry key="H4" value="11.015182287318321" />
-      <entry key="D1" value="34.198453382553595" />
-      <entry key="W1" value="94.23737614802484" />
+      <entry key="MS100" value="1.9351133664537014E-22" />
+      <entry key="MS500" value="4.542984787495542E-5" />
+      <entry key="S2" value="0.08209851858736246" />
+      <entry key="S5" value="0.36790367688294645" />
+      <entry key="S10" value="0.6065506383501269" />
+      <entry key="S30" value="0.84649242760533" />
+      <entry key="S60" value="0.9212371448121377" />
+      <entry key="M2" value="0.9949061640234682" />
+      <entry key="M5" value="1.3484477167781268" />
+      <entry key="M10" value="1.971664733308351" />
+      <entry key="M15" value="2.437488895056108" />
+      <entry key="M30" value="3.3616933993288654" />
+      <entry key="H1" value="4.917161549319189" />
+      <entry key="H2" value="8.306554476491998" />
+      <entry key="H4" value="13.796888566159899" />
+      <entry key="D1" value="37.595230235405964" />
+      <entry key="W1" value="98.0045268537465" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.022405550750247305" />
-      <entry key="MS500" value="0.46781174891570004" />
-      <entry key="S2" value="0.8270233684624885" />
-      <entry key="S5" value="0.9269911961832797" />
-      <entry key="S10" value="0.9951367939308923" />
-      <entry key="S30" value="2.3920681704075792" />
-      <entry key="S60" value="4.984381501960674" />
-      <entry key="M2" value="8.46812258225321" />
-      <entry key="M5" value="13.225974179169672" />
-      <entry key="M10" value="16.453465243920796" />
-      <entry key="M15" value="18.24420999985335" />
-      <entry key="M30" value="23.060255190460524" />
-      <entry key="H1" value="43.598988142927205" />
-      <entry key="H2" value="122.04623827137145" />
-      <entry key="H4" value="326.40945498111694" />
-      <entry key="D1" value="1178.2777386740347" />
-      <entry key="W1" value="2532.2843613961295" />
+      <entry key="MS100" value="8.27592988980352E-15" />
+      <entry key="MS500" value="0.0015436713607857567" />
+      <entry key="S2" value="0.33419218898767955" />
+      <entry key="S5" value="1.3872252460585102" />
+      <entry key="S10" value="2.331031854913512" />
+      <entry key="S30" value="3.3336510118672176" />
+      <entry key="S60" value="3.6518942950669224" />
+      <entry key="M2" value="3.8731777894492545" />
+      <entry key="M5" value="6.244353106571084" />
+      <entry key="M10" value="16.93699601903044" />
+      <entry key="M15" value="28.035876704791516" />
+      <entry key="M30" value="50.83590963918146" />
+      <entry key="H1" value="82.1161367876931" />
+      <entry key="H2" value="160.41587320191357" />
+      <entry key="H4" value="359.9761245784893" />
+      <entry key="D1" value="1227.5520693331298" />
+      <entry key="W1" value="2596.0082296273713" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -324,7 +322,8 @@
       <workItem from="1792252679731" duration="14140000" />
       <workItem from="1792424882578" duration="4659000" />
       <workItem from="1792525485509" duration="1497000" />
-      <workItem from="1792704080661" duration="10111000" />
+      <workItem from="1792704080661" duration="10587000" />
+      <workItem from="1792931075759" duration="4603000" />
     </task>
     <task id="LOCAL-00001" summary="postifx assignment parsing">
       <option name="closed" value="true" />
@@ -582,14 +581,21 @@
       <option name="project" value="LOCAL" />
       <updated>1792529151384</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="[HIR] Add identifier resolution">
+      <option name="closed" value="true" />
+      <created>1792721346764</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1792721346764</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="number of arguments testing" />
     <MESSAGE value="call semantic check and testing" />
     <MESSAGE value="semantic declared variable check and testing" />
     <MESSAGE value="analyze_expr  fix" />
@@ -614,7 +620,8 @@
     <MESSAGE value="Testing of for" />
     <MESSAGE value="[HIR] Implement for loop lowering&quot;" />
     <MESSAGE value="parser refactor" />
-    <option name="LAST_COMMIT_MESSAGE" value="parser refactor" />
+    <MESSAGE value="[HIR] Add identifier resolution" />
+    <option name="LAST_COMMIT_MESSAGE" value="[HIR] Add identifier resolution" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

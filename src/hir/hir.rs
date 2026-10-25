@@ -19,7 +19,8 @@ pub struct Function {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Param {
     pub name: String,
-    pub type_annotation: TypeAnnotation,
+    pub symbol_id: SymbolId,
+    pub type_annotation: TypeAnnotation
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

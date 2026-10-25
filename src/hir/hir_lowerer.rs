@@ -29,17 +29,24 @@ impl HirLowerer {
     }
 
     pub fn lower_function(&mut self, function: &ast::Function) -> hir::Function {
-        hir::Function {
-            name: function.name.clone(),
-            params: function.params.iter().map(|param| self.lower_param(param)).collect(),
-            return_type: self.lower_type_annotation(&function.return_type),
-            body: self.lower_block(&function.body)
-        }
+        self.scopes.push(HashMap::new());
+
+        let name = function.name.clone();
+        let params = function.params.iter().map(|param| self.lower_param(param)).collect();
+        let return_type = self.lower_type_annotation(&function.return_type);
+        let body = self.lower_block(&function.body);
+
+        self.scopes.pop();
+
+        return hir::Function { name, params, return_type, body };
     }
 
     pub fn lower_param(&mut self, param: &ast::Param) -> hir::Param {
+        let symbol_id = self.declare(&param.name);
+
         hir::Param {
             name: param.name.clone(),
+            symbol_id,
             type_annotation: self.lower_type_annotation(&param.type_annotation)
         }
     }
