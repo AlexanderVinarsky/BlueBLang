@@ -16,6 +16,7 @@ pub struct Symbol {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Program {
     pub items: Vec<Item>,
+    pub symbols: Vec<Symbol>
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

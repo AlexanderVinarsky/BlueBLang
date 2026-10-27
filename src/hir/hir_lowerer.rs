@@ -18,7 +18,7 @@ impl HirLowerer {
         }
     }
 
-    pub fn lower_program(&mut self, program: &ast::Program) -> hir::Program {
+    pub fn lower_program(mut self, program: &ast::Program) -> hir::Program {
         self.scopes.push(HashMap::new()); //global scope!
 
         for item in &program.items {
@@ -31,7 +31,11 @@ impl HirLowerer {
 
         let items = program.items.iter().map(|item| self.lower_item(item)).collect();
         self.scopes.pop();
-        hir::Program { items }
+
+        hir::Program {
+            items,
+            symbols: self.symbols,
+        }
     }
 
     pub fn lower_item(&mut self, item: &ast::Item) -> hir::Item {

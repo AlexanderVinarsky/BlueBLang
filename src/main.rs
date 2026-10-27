@@ -7,14 +7,14 @@ fn main() {
     let cases = [
         "fn main() { arr[i] = x; }",
     ];
-    let mut lowerer = HirLowerer::new();
+
 
     for (i, input) in cases.iter().enumerate() {
         println!("{}", input);
 
         match parse_program(input) {
             Ok(ast) => {
-                let hir = lowerer.lower_program(&ast);
+                let hir = HirLowerer::new().lower_program(&ast);
                 println!("AST:\n{:#?}", ast);
                 println!("HIR:\n{:#?}", hir);
             }
