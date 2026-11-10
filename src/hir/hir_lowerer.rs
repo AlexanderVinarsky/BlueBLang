@@ -64,7 +64,7 @@ impl HirLowerer {
         hir::Param {
             name: param.name.clone(),
             symbol_id,
-            type_annotation: self.lower_type_annotation(&param.type_annotation)
+            ty: self.lower_type_annotation(&param.type_annotation)
         }
     }
 
@@ -218,12 +218,12 @@ impl HirLowerer {
         }
     }
 
-    pub fn lower_type_annotation(&mut self, annotation: &ast::TypeAnnotation) -> hir::TypeAnnotation {
+    pub fn lower_type_annotation(&mut self, annotation: &ast::TypeAnnotation) -> hir::Type {
         match annotation {
-            ast::TypeAnnotation::Int => hir::TypeAnnotation::Int,
-            ast::TypeAnnotation::Bool => hir::TypeAnnotation::Bool,
-            ast::TypeAnnotation::String => hir::TypeAnnotation::String,
-            ast::TypeAnnotation::Unit => hir::TypeAnnotation::Unit
+            ast::TypeAnnotation::Int => hir::Type::Int,
+            ast::TypeAnnotation::Bool => hir::Type::Bool,
+            ast::TypeAnnotation::String => hir::Type::String,
+            ast::TypeAnnotation::Unit => hir::Type::Unit
         }
     }
 

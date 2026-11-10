@@ -29,7 +29,7 @@ pub struct Function {
     pub name: String,
     pub symbol_id: SymbolId,
     pub params: Vec<Param>,
-    pub return_type: TypeAnnotation,
+    pub return_type: Type,
     pub body: Block,
 }
 
@@ -37,7 +37,7 @@ pub struct Function {
 pub struct Param {
     pub name: String,
     pub symbol_id: SymbolId,
-    pub type_annotation: TypeAnnotation
+    pub ty: Type
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -147,7 +147,7 @@ pub enum UnaryOp {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum TypeAnnotation {
+pub enum Type {
     Int,
     Bool,
     String,

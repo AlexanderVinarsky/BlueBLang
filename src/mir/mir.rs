@@ -7,7 +7,7 @@ pub struct BlockId(pub u32);
 pub struct LocalId(pub u32);
 
 pub struct BasicBlock {
-    pub statements: Vec<Instruction>,
+    pub instructions: Vec<Instruction>,
     pub terminator: Terminator
 }
 
