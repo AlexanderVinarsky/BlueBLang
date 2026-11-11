@@ -110,7 +110,7 @@ impl HirLowerer {
                 // cond
                 let condition = match condition {
                     Some(condition) => self.lower_expr(condition),
-                    None => hir::Expr::Bool(true),
+                    None => hir::Expr { kind: hir::ExprKind::Bool(true), ty: None },
                 };
 
                 // body
@@ -151,47 +151,47 @@ impl HirLowerer {
     }
 
     pub fn lower_expr(&mut self, expr: &ast::Expr) -> hir::Expr {
-        match expr {
-            ast::Expr::Number(number) => hir::Expr::Number(number.clone()),
+        let kind = match expr {
+            ast::Expr::Number(number) => hir::ExprKind::Number(number.clone()),
 
             ast::Expr::Identifier(name) => {
                 let symbol_id = self.resolve(name)
-                    .unwrap_or_else(|| panic!("Unresolved identifier: {name}"));
-                return hir::Expr::Identifier {
-                    name: name.clone(),
-                    symbol_id
-                }
+                    .unwrap_or_else(|| panic!("!unresolved identifier: {name}"));
+                hir::ExprKind::Identifier { name: name.clone(), symbol_id }
             },
 
-            ast::Expr::String(value) => hir::Expr::String(value.clone()),
-            ast::Expr::Bool(value) => hir::Expr::Bool(*value),
+            ast::Expr::String(value) => hir::ExprKind::String(value.clone()),
+            ast::Expr::Bool(value) => hir::ExprKind::Bool(*value),
 
-            ast::Expr::Binary { left, op, right } => hir::Expr::Binary {
+            ast::Expr::Binary { left, op, right } => hir::ExprKind::Binary {
                 left: Box::new(self.lower_expr(left)),
                 op: self.lower_binary_op(op),
                 right: Box::new(self.lower_expr(right))
             },
 
-            ast::Expr::Unary { op, expr } => hir::Expr::Unary {
+            ast::Expr::Unary { op, expr } => hir::ExprKind::Unary {
                 op: self.lower_unary_op(op),
                 expr: Box::new(self.lower_expr(expr))
             },
 
-            ast::Expr::Index { object, index } => hir::Expr::Index {
+            ast::Expr::Index { object, index } => hir::ExprKind::Index {
                 object: Box::new(self.lower_expr(object)),
                 index: Box::new(self.lower_expr(index))
             },
 
-            ast::Expr::Call { callee, args } => hir::Expr::Call {
-                callee: Box::new(self.lower_expr(callee)),
-                args: args.iter().map(|arg| self.lower_expr(arg)).collect()
+            ast::Expr::Call { callee, args } => {
+                hir::ExprKind::Call {
+                    callee: Box::new(self.lower_expr(callee)),
+                    args: args.iter().map(|arg| self.lower_expr(arg)).collect()
+                }
             },
 
-            ast::Expr::Member { object, field } => hir::Expr::Member {
+            ast::Expr::Member { object, field } => hir::ExprKind::Member {
                 object: Box::new(self.lower_expr(object)),
                 field: field.clone()
             }
-        }
+        };
+        return hir::Expr { kind, ty: None }
     }
 
     pub fn lower_binary_op(&mut self, op: &ast::BinaryOp) -> hir::BinaryOp {
