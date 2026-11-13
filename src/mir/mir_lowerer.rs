@@ -51,6 +51,20 @@ impl FunctionBuilder {
             .collect();
         (self.locals, blocks)
     }
+
+    fn add_instruction(&mut self, instr: mir::Instruction) {
+        let block_id = self.current_block.expect("!no active basic block");
+        let block = &mut self.blocks[block_id.0 as usize];
+        assert!(block.terminator.is_none(), "!cant emit instruction after terminator");
+        block.instructions.push(instr);
+    }
+
+    fn add_terminator(&mut self, terminator: mir::Terminator) {
+        let block_id = self.current_block.take().expect("!no active basic block");
+        let block = &mut self.blocks[block_id.0 as usize];
+        assert!(block.terminator.is_none(), "!basic block already has a terminator");
+        block.terminator = Some(terminator);
+    }
 }
 
 impl MirLowerer {
@@ -95,6 +109,126 @@ impl MirLowerer {
             hir::Type::Bool => mir::Type::Bool,
             hir::Type::String => mir::Type::String,
             hir::Type::Unit => mir::Type::Unit,
+        }
+    }
+
+    fn lower_block(&mut self, block: &hir::Block, builder: &mut FunctionBuilder) {
+        for stmt in &block.stmts {
+            if builder.current_block.is_none() {
+                break;
+            }
+            self.lower_stmt(stmt, builder);
+        }
+    }
+
+    fn lower_expr(&mut self, expr: &hir::Expr, builder: &mut FunctionBuilder) -> mir::Operand {
+        match &expr.kind {
+            hir::ExprKind::Number(number) => {
+                mir::Operand::Constant(
+                    mir::Constant::Int(number.parse::<i64>().unwrap())
+                )
+            }
+
+            hir::ExprKind::Identifier { symbol_id, .. } => {
+                let local_id = builder.symbol_to_local[symbol_id];
+                mir::Operand::Local(local_id)
+            }
+
+            hir::ExprKind::String(string) => {
+                mir::Operand::Constant(
+                    mir::Constant::String(string.clone())
+                )
+            }
+
+            hir::ExprKind::Bool(bool) => {
+                mir::Operand::Constant(
+                    mir::Constant::Bool(bool.clone())
+                )
+            }
+
+            hir::ExprKind::Binary { left, op, right } => {
+                let lhs = self.lower_expr(left, builder);
+                let rhs = self.lower_expr(right, builder);
+                let ty = self.lower_type(expr.ty.as_ref().expect("!untyped HIR expression"));
+                let destination = builder.add_local(ty, None);
+
+                builder.add_instruction(mir::Instruction::Binary {
+                    destination: mir::Place::Local(destination),
+                    op: self.lower_binary_op(op),
+                    lhs,
+                    rhs
+                });
+
+                mir::Operand::Local(destination)
+            }
+
+            hir::ExprKind::Unary { op, expr: operand_expr } => {
+                let operand = self.lower_expr(operand_expr, builder);
+                let ty = self.lower_type(
+                    expr.ty.as_ref().expect("!untyped HIR expression")
+                );
+                let destination = builder.add_local(ty, None);
+
+                builder.add_instruction(mir::Instruction::Unary {
+                    destination: mir::Place::Local(destination),
+                    op: self.lower_unary_op(op),
+                    operand
+                });
+                mir::Operand::Local(destination)
+            }
+
+            hir::ExprKind::Call { callee, args } => {
+                todo!()
+            }
+
+            hir::ExprKind::Index { .. } => {
+                todo!()
+            }
+
+            hir::ExprKind::Member { .. } => {
+                todo!()
+            }
+        }
+    }
+
+    fn lower_stmt(&mut self, stmt: &hir::Stmt, builder: &mut FunctionBuilder) {
+        match stmt {
+            hir::Stmt::Let { symbol_id, value, .. } => {
+                let source = self.lower_expr(value, builder);
+                let ty = source.ty
+
+                let local_id = builder.add_local(ty, Some(*symbol_id));
+
+                builder.add_instruction(mir::Instruction::Copy {
+                    destination: mir::Place::Local(local_id),
+                    source
+                });
+            }
+
+            hir::Stmt::ExprStmt(expr) => {
+                self.lower_expr(expr, builder);
+            }
+
+            hir::Stmt::Block(block) => {
+                self.lower_block(block, builder);
+            }
+
+            hir::Stmt::If {condition, then_branch, else_branch} => {
+                self.lower_if(condition, then_branch, else_branch.as_deref(), builder);
+            }
+
+            hir::Stmt::While {condition, body} => {
+                self.lower_while(condition, body, builder);
+            }
+
+            hir::Stmt::Assign { target, value } => {
+                self.lower_assign(target, value, builder);
+            }
+
+            hir::Stmt::Return(expr) => {
+                let value = expr.as_ref().map(|expr| self.lower_expr(expr, builder));
+                builder.add_terminator(mir::Terminator::Return(value));
+            }
         }
     }
 }
