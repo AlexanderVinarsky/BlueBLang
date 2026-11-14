@@ -110,7 +110,10 @@ pub enum BinaryOp {
     Gt,
     Ge,
     Lt,
-    Le
+    Le,
+
+    And,
+    Or
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

@@ -1,6 +1,7 @@
 use crate::hir::hir;
 use crate::mir::mir;
 use std::collections::HashMap;
+use crate::hir::hir::{Expr, Stmt};
 use crate::mir::mir::LocalId;
 
 pub struct MirLowerer {}
@@ -41,11 +42,23 @@ impl FunctionBuilder {
         return local_id;
     }
 
+    pub fn new_block(&mut self) -> mir::BlockId {
+        let block_id = mir::BlockId(self.blocks.len() as u32);
+        self.blocks.push(PendingBlock{instructions: Vec::new(), terminator: None});
+        return block_id;
+    }
+
+    pub fn switch_to_block(&mut self, block_id: mir::BlockId) {
+        let block = self.blocks.get(block_id.0 as usize).expect("!BB does not exist"); //might be removved after BB deletion solution
+        assert!(block.terminator.is_none(), "!cant switch to terminated BB");
+        self.current_block = Some(block_id);
+    }
+
     fn finish(self) -> (Vec<mir::LocalDecl>, Vec<mir::BasicBlock>) {
         let blocks = self.blocks.into_iter().map(|block| {
                 mir::BasicBlock {
                     instructions: block.instructions,
-                    terminator: block.terminator.expect("!basic block has no terminator")
+                    terminator: block.terminator.expect("!BB has no terminator")
                 }
             })
             .collect();
@@ -98,7 +111,7 @@ impl MirLowerer {
             params.push(local_id);
         }
         let return_type = self.lower_type(&function.return_type);
-        //self.lower_block(); todo
+        self.lower_block(&function.body, &mut builder);
         let (locals, blocks) = builder.finish();
         return mir::Function {name, symbol_id, params, return_type, locals, blocks};
     }
@@ -118,6 +131,106 @@ impl MirLowerer {
                 break;
             }
             self.lower_stmt(stmt, builder);
+        }
+    }
+
+    fn lower_while(&mut self, condition: &Expr, body: &Stmt, builder: &mut FunctionBuilder) {
+        let condition_block = builder.new_block();
+        let body_block      = builder.new_block();
+        let exit_block      = builder.new_block();
+
+        builder.add_terminator(mir::Terminator::Goto(condition_block));
+        builder.switch_to_block(body_block);
+        let condition = self.lower_expr(condition, builder);
+        builder.add_terminator(mir::Terminator::Branch {condition, then_block: body_block, else_block: exit_block});
+
+        self.lower_stmt(body, builder);
+
+        if builder.current_block.is_some() {
+            builder.add_terminator(mir::Terminator::Goto(condition_block));
+        }
+        builder.switch_to_block(exit_block);
+    }
+
+    fn lower_if(&mut self,
+        condition: &Expr,
+        then_branch: &Stmt,
+        else_branch: Option<&Stmt>,
+        builder: &mut FunctionBuilder
+    ) {
+        let condition = self.lower_expr(condition, builder);
+        let then_block = builder.new_block();
+
+        if let Some(else_branch) = else_branch {
+            let else_block = builder.new_block();
+
+            builder.add_terminator(mir::Terminator::Branch {condition, then_block, else_block});
+
+            builder.switch_to_block(then_block);
+            self.lower_stmt(then_branch, builder);
+            let then_end = builder.current_block;
+
+            builder.switch_to_block(else_block);
+            self.lower_stmt(else_branch, builder);
+            let else_end = builder.current_block;
+
+            if then_end.is_none() && else_end.is_none() {
+                return;
+            }
+
+            let join_block = builder.new_block();
+
+            if let Some(block) = then_end {
+                builder.switch_to_block(block);
+                builder.add_terminator(mir::Terminator::Goto(join_block));
+            }
+
+            if let Some(block) = else_end {
+                builder.switch_to_block(block);
+                builder.add_terminator(mir::Terminator::Goto(join_block));
+            }
+
+            builder.switch_to_block(join_block);
+        }
+
+        else {
+            let join_block = builder.new_block();
+            builder.add_terminator(mir::Terminator::Branch {condition, then_block, else_block: join_block});
+            builder.switch_to_block(then_block);
+            self.lower_stmt(then_branch, builder);
+
+            if builder.current_block.is_some() {
+                builder.add_terminator(mir::Terminator::Goto(join_block));
+            }
+
+            builder.switch_to_block(join_block);
+        }
+    }
+
+    fn lower_unary_op(&mut self, op: &hir::UnaryOp) -> mir::UnaryOp {
+        match op {
+            hir::UnaryOp::Bang => mir::UnaryOp::Not,
+            hir::UnaryOp::Minus => mir::UnaryOp::Neg
+        }
+    }
+
+    fn lower_binary_op(&mut self, op: &hir::BinaryOp) -> mir::BinaryOp {
+        match op {
+            hir::BinaryOp::Plus => mir::BinaryOp::Add,
+            hir::BinaryOp::Minus => mir::BinaryOp::Sub,
+            hir::BinaryOp::Star => mir::BinaryOp::Mul,
+            hir::BinaryOp::Slash => mir::BinaryOp::Div,
+
+            hir::BinaryOp::EqualEqual => mir::BinaryOp::Eq,
+            hir::BinaryOp::BangEqual => mir::BinaryOp::Ne,
+
+            hir::BinaryOp::Greater => mir::BinaryOp::Gt,
+            hir::BinaryOp::GreaterEqual => mir::BinaryOp::Ge,
+            hir::BinaryOp::Less => mir::BinaryOp::Lt,
+            hir::BinaryOp::LessEqual => mir::BinaryOp::Le,
+
+            hir::BinaryOp::And => mir::BinaryOp::And,
+            hir::BinaryOp::Or => mir::BinaryOp::Or,
         }
     }
 
@@ -195,7 +308,9 @@ impl MirLowerer {
         match stmt {
             hir::Stmt::Let { symbol_id, value, .. } => {
                 let source = self.lower_expr(value, builder);
-                let ty = source.ty
+                let ty = self.lower_type(
+                    value.ty.as_ref().expect("!untyped HIR expression")
+                );
 
                 let local_id = builder.add_local(ty, Some(*symbol_id));
 
@@ -222,7 +337,7 @@ impl MirLowerer {
             }
 
             hir::Stmt::Assign { target, value } => {
-                self.lower_assign(target, value, builder);
+                todo!(); //self.lower_assign(target, value, builder);
             }
 
             hir::Stmt::Return(expr) => {
