@@ -10,14 +10,17 @@ fn lower(source: &str) -> hir::Program {
 }
 
 fn identifier_id(expr: &hir::Expr) -> hir::SymbolId {
-    let hir::Expr::Identifier { symbol_id, .. } = expr else {
+    let hir::ExprKind::Identifier { symbol_id, .. } = &expr.kind else {
         panic!("!expected Identifier");
     };
     *symbol_id
 }
 
 fn called_id(stmt: &hir::Stmt) -> hir::SymbolId {
-    let hir::Stmt::ExprStmt(hir::Expr::Call { callee, .. }) = stmt else {
+    let hir::Stmt::ExprStmt(expr) = stmt else {
+        panic!("!expected ExprStmt");
+    };
+    let hir::ExprKind::Call { callee, .. } = &expr.kind else {
         panic!("!expected Call");
     };
     identifier_id(callee)
@@ -151,7 +154,7 @@ fn resolves_for_variable() {
         panic!("!expected While");
     };
 
-    let hir::Expr::Binary { left, .. } = condition else {
+    let hir::ExprKind::Binary { left, .. } = &condition.kind else {
         panic!("!expected Binary condition");
     };
 
