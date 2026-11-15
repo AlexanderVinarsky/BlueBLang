@@ -16,6 +16,13 @@ pub struct FunctionInfo {
 }
 
 impl HirTypeAnnotator {
+    pub fn new() -> Self {
+        Self {
+            symbol_types: HashMap::<hir::SymbolId, hir::Type>::new(),
+            functions: HashMap::<hir::SymbolId, FunctionInfo>::new()
+        }
+    }
+
     pub fn annotate_program(&mut self, program: &mut hir::Program) {
         for item in &program.items {
             match item {
