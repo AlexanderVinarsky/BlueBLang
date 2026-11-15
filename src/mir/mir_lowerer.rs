@@ -11,7 +11,7 @@ struct PendingBlock {
     terminator: Option<mir::Terminator>
 }
 
-struct FunctionBuilder { // NB for terminators
+struct FunctionBuilder {
     locals: Vec<mir::LocalDecl>,
     blocks: Vec<PendingBlock>,
     current_block: Option<mir::BlockId>,
@@ -131,6 +131,31 @@ impl MirLowerer {
                 break;
             }
             self.lower_stmt(stmt, builder);
+        }
+    }
+
+    fn lower_assign(&mut self, target: &Expr, value: &Expr, builder: &mut FunctionBuilder) {
+        let destination = self.lower_place(target, builder);
+        let source = self.lower_expr(value, builder);
+        builder.add_instruction(mir::Instruction::Copy {destination, source});
+    }
+
+    fn lower_place(&mut self, expr: &Expr, builder: &mut FunctionBuilder) -> mir::Place {
+        match &expr.kind {
+            hir::ExprKind::Identifier { symbol_id, .. } => {
+                let local_id = builder.symbol_to_local[symbol_id];
+                mir::Place::Local(local_id)
+            }
+
+            hir::ExprKind::Index { .. } => {
+                todo!("")
+            }
+
+            hir::ExprKind::Member { .. } => {
+                todo!("")
+            }
+
+            _ => unreachable!("!invalid assignment target"),
         }
     }
 
@@ -337,7 +362,7 @@ impl MirLowerer {
             }
 
             hir::Stmt::Assign { target, value } => {
-                todo!(); //self.lower_assign(target, value, builder);
+                self.lower_assign(target, value, builder);
             }
 
             hir::Stmt::Return(expr) => {
