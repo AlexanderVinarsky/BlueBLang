@@ -165,10 +165,11 @@ impl MirLowerer {
         let exit_block      = builder.new_block();
 
         builder.add_terminator(mir::Terminator::Goto(condition_block));
-        builder.switch_to_block(body_block);
+        builder.switch_to_block(condition_block);
         let condition = self.lower_expr(condition, builder);
         builder.add_terminator(mir::Terminator::Branch {condition, then_block: body_block, else_block: exit_block});
 
+        builder.switch_to_block(body_block);
         self.lower_stmt(body, builder);
 
         if builder.current_block.is_some() {
