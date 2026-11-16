@@ -171,3 +171,55 @@ fn return_stops_lowering_following_statements() {
     assert!(function.locals.is_empty());
     assert!(matches!(function.blocks[0].terminator, mir::Terminator::Return(None)));
 }
+
+#[test]
+fn lowers_call_with_return_value() {
+    let program = lower(r#"
+        fn add(a: int, b: int) -> int {
+            ret a + b;
+        }
+
+        fn main() {
+            let result = add(10, 20);
+            ret;
+        }
+    "#);
+
+    let add = &program.functions[0];
+    let main = &program.functions[1];
+
+    assert!(matches!(
+        &main.blocks[0].instructions[0],
+        mir::Instruction::Call {destination: Some(mir::Place::Local(_)), function, args}
+        if *function == add.symbol_id && matches!(
+                args.as_slice(),
+                [
+                    mir::Operand::Constant(mir::Constant::Int(10)),
+                    mir::Operand::Constant(mir::Constant::Int(20))
+                ]
+            )
+    ));
+}
+
+#[test]
+fn lowers_unit_call_without_destination() {
+    let program = lower(r#"
+        fn foo() {
+            ret;
+        }
+
+        fn main() {
+            foo();
+            ret;
+        }
+    "#);
+
+    let foo = &program.functions[0];
+    let main = &program.functions[1];
+
+    assert!(matches!(
+        &main.blocks[0].instructions[0],
+        mir::Instruction::Call {destination: None, function, args}
+        if *function == foo.symbol_id && args.is_empty()
+    ));
+}
