@@ -26,6 +26,7 @@ pub struct Function {
     pub blocks: Vec<BasicBlock>
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Type {
     Int,
     Bool,
@@ -49,7 +50,8 @@ pub enum Operand {
 pub enum Constant {
     Int(i64),
     Bool(bool),
-    String(String)
+    String(String),
+    Unit
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

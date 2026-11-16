@@ -49,7 +49,7 @@ impl FunctionBuilder {
     }
 
     pub fn switch_to_block(&mut self, block_id: mir::BlockId) {
-        let block = self.blocks.get(block_id.0 as usize).expect("!BB does not exist"); //might be removved after BB deletion solution
+        let block = self.blocks.get(block_id.0 as usize).expect("!BB does not exist");
         assert!(block.terminator.is_none(), "!cant switch to terminated BB");
         self.current_block = Some(block_id);
     }
@@ -317,7 +317,30 @@ impl MirLowerer {
             }
 
             hir::ExprKind::Call { callee, args } => {
-                todo!()
+                let function = match &callee.kind {
+                    hir::ExprKind::Identifier { symbol_id, .. } => *symbol_id,
+                    _ => unreachable!("!no direct function call"),
+                };
+
+                let args = args.iter().map(|arg| self.lower_expr(arg, builder)).collect();
+                let ty = self.lower_type(expr.ty.as_ref().expect("!no type for hir expression"));
+
+                if (ty == mir::Type::Unit) {
+                    builder.add_instruction(mir::Instruction::Call {
+                        destination: None, function, args
+                    });
+
+                    return mir::Operand::Constant(mir::Constant::Unit)
+                }
+                else {
+                    let local_id = builder.add_local(ty, None);
+
+                    builder.add_instruction(mir::Instruction::Call {
+                        destination: Some(mir::Place::Local(local_id)), function, args
+                    });
+
+                    return mir::Operand::Local(local_id)
+                }
             }
 
             hir::ExprKind::Index { .. } => {
